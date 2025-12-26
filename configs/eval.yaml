@@ -1,0 +1,54 @@
+# Configuration de l'evaluation
+# Parametres pour l'evaluation du modele
+
+# Valeurs de K pour les metriques de ranking (Precision@K, Recall@K, NDCG@K)
+k_values:
+  - 5
+  - 10
+  - 20
+
+# Calculer RMSE (pour feedback explicite)
+compute_rmse: true
+
+# Calculer les metriques de ranking
+compute_ranking_metrics: true
+
+# Configuration des metriques
+metrics:
+  # RMSE pour feedback explicite
+  rmse:
+    enabled: true
+    
+  # Precision@K
+  precision:
+    enabled: true
+    
+  # Recall@K
+  recall:
+    enabled: true
+    
+  # NDCG@K (Normalized Discounted Cumulative Gain)
+  ndcg:
+    enabled: true
+    
+  # MAP@K (Mean Average Precision)
+  map:
+    enabled: true
+    
+  # MRR (Mean Reciprocal Rank)
+  mrr:
+    enabled: true
+
+# Configuration de l'evaluation
+evaluation:
+  # Nombre d'utilisateurs a evaluer (null pour tous)
+  n_users: null
+  
+  # Nombre de candidats par utilisateur pour le ranking
+  n_candidates: 100
+  
+  # Exclure les items deja vus dans l'entrainement
+  exclude_seen: true
+  
+  # Seuil de pertinence pour les metriques binaires
+  relevance_threshold: 3.5

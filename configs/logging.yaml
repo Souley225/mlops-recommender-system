@@ -1,0 +1,49 @@
+# Configuration du logging
+# Parametres pour la journalisation structuree
+
+# Niveau de log: DEBUG, INFO, WARNING, ERROR, CRITICAL
+level: INFO
+
+# Format de sortie: json ou console
+format: json
+
+# Configuration structlog
+structlog:
+  processors:
+    - timestamper
+    - add_log_level
+    - json_renderer
+  
+  # Inclure le contexte dans les logs
+  include_context: true
+  
+  # Inclure le traceback complet pour les erreurs
+  include_traceback: true
+
+# Configuration des handlers
+handlers:
+  console:
+    enabled: true
+    level: INFO
+    
+  file:
+    enabled: false
+    level: DEBUG
+    path: logs/app.log
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+
+# Logs specifiques par module
+modules:
+  src.data:
+    level: INFO
+  src.models:
+    level: INFO
+  src.serving:
+    level: INFO
+  src.ui:
+    level: WARNING
+  uvicorn:
+    level: WARNING
+  mlflow:
+    level: WARNING

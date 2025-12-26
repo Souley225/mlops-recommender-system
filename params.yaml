@@ -1,0 +1,67 @@
+# Parametres globaux du pipeline DVC
+# Ces parametres sont utilises par toutes les etapes du pipeline
+
+# Configuration des donnees
+data:
+  dataset_name: ml-latest-small
+  dataset_url: https://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+  raw_dir: data/raw
+  processed_dir: data/processed
+  interim_dir: data/interim
+
+# Configuration du feedback
+feedback:
+  type: explicit  # explicit ou implicit
+  rating_threshold: 3.5  # Seuil pour binarisation en feedback implicite
+  min_rating: 0.5
+  max_rating: 5.0
+
+# Configuration du split
+split:
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  temporal_split: true  # Utiliser un split temporel
+  min_user_interactions: 5
+  min_item_interactions: 5
+
+# Configuration des features
+features:
+  normalize_ratings: true
+  compute_popularity: true
+  popularity_decay: 0.95  # Facteur de decroissance temporelle
+
+# Configuration du modele
+model:
+  type: als  # popularity, als, svd, implicit
+  embedding_dim: 64
+  regularization: 0.01
+  iterations: 15
+  alpha: 40  # Parametre de confiance pour feedback implicite
+
+# Configuration de l'entrainement
+train:
+  random_seed: 42
+  use_gpu: false
+  log_to_mlflow: true
+  experiment_name: mlops-recommender
+
+# Configuration de l'optimisation (Optuna)
+optuna:
+  enabled: true
+  n_trials: 20
+  metric: ndcg_at_10
+  direction: maximize
+
+# Configuration de l'evaluation
+eval:
+  k_values: [5, 10, 20]
+  compute_rmse: true
+  compute_ranking_metrics: true
+
+# Configuration du serving
+serving:
+  default_k: 10
+  max_k: 100
+  cache_recommendations: true
+  cache_ttl_seconds: 3600

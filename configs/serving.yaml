@@ -1,0 +1,48 @@
+# Configuration du serving
+# Parametres pour l'API de recommandation
+
+# Configuration du serveur
+host: 0.0.0.0
+port: 8000
+
+# Nombre de workers (mode production)
+workers: 4
+
+# Configuration du modele
+model:
+  name: als_recommender
+  stage: Production
+  path: models/model.joblib
+
+# Configuration des recommandations
+recommendations:
+  default_k: 10
+  max_k: 100
+  min_k: 1
+
+# Configuration du cache
+cache:
+  enabled: true
+  ttl_seconds: 3600
+  max_size: 10000
+
+# Configuration de la sante
+health:
+  include_model_info: true
+  include_data_info: true
+
+# Configuration CORS
+cors:
+  enabled: true
+  origins:
+    - "*"
+  methods:
+    - "GET"
+    - "POST"
+  headers:
+    - "*"
+
+# Rate limiting
+rate_limit:
+  enabled: false
+  requests_per_minute: 60

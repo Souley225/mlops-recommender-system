@@ -1,0 +1,29 @@
+# Configuration des donnees
+# Parametres pour le telechargement et le traitement du jeu de donnees
+
+# Nom du jeu de donnees MovieLens
+dataset_name: ml-latest-small
+
+# URL de telechargement
+dataset_url: https://files.grouplens.org/datasets/movielens/ml-latest-small.zip
+
+# Repertoires de donnees
+raw_dir: data/raw
+interim_dir: data/interim
+processed_dir: data/processed
+
+# Configuration du feedback
+feedback:
+  type: explicit  # explicit ou implicit
+  rating_threshold: 3.5  # Seuil pour conversion en feedback implicite
+  min_rating: 0.5
+  max_rating: 5.0
+
+# Configuration du split train/val/test
+split:
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  temporal_split: true  # Utiliser un split base sur le timestamp
+  min_user_interactions: 5  # Nombre minimum d'interactions par utilisateur
+  min_item_interactions: 5  # Nombre minimum d'interactions par item

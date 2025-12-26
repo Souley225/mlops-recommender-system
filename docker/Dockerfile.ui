@@ -1,0 +1,87 @@
+# Image Docker pour l'interface Streamlit
+# Interface utilisateur pour le systeme de recommandation
+
+FROM python:3.11-slim as builder
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    POETRY_VERSION=1.7.1 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1
+
+# Installer Poetry
+RUN pip install "poetry==${POETRY_VERSION}"
+
+# Copier les fichiers de dependances
+WORKDIR /app
+COPY pyproject.toml poetry.lock* ./
+
+# Installer les dependances
+RUN poetry install --no-root --only main --no-interaction
+
+# Image finale
+FROM python:3.11-slim
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    STREAMLIT_SERVER_PORT=8501 \
+    STREAMLIT_SERVER_ADDRESS=0.0.0.0 \
+    STREAMLIT_SERVER_HEADLESS=true \
+    STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+
+# Creer un utilisateur non-root
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid appgroup --shell /bin/bash --create-home appuser
+
+# Installer curl pour les health checks
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copier les packages Python depuis le builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Repertoire de travail
+WORKDIR /app
+
+# Copier le code source de l'UI
+COPY --chown=appuser:appgroup src/ui/ ./src/ui/
+COPY --chown=appuser:appgroup src/__init__.py ./src/
+
+# Creer le repertoire .streamlit pour la configuration
+RUN mkdir -p /home/appuser/.streamlit && \
+    chown -R appuser:appgroup /home/appuser/.streamlit
+
+# Configuration Streamlit
+RUN echo '[server]\n\
+headless = true\n\
+enableCORS = false\n\
+enableXsrfProtection = false\n\
+\n\
+[theme]\n\
+primaryColor = "#667eea"\n\
+backgroundColor = "#0e1117"\n\
+secondaryBackgroundColor = "#262730"\n\
+textColor = "#fafafa"\n\
+font = "sans serif"\n\
+' > /home/appuser/.streamlit/config.toml
+
+# Changer vers l'utilisateur non-root
+USER appuser
+
+# Exposer le port
+EXPOSE 8501
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${STREAMLIT_SERVER_PORT}/_stcore/health || exit 1
+
+# Commande de demarrage
+CMD ["streamlit", "run", "src/ui/app.py", "--server.port=8501", "--server.address=0.0.0.0"]

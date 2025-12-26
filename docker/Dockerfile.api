@@ -1,0 +1,75 @@
+# Image Docker pour l'API FastAPI de recommandation
+# Image legere optimisee pour le serving en production
+
+FROM python:3.11-slim as builder
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    POETRY_VERSION=1.7.1 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1
+
+# Installer Poetry
+RUN pip install "poetry==${POETRY_VERSION}"
+
+# Copier les fichiers de dependances
+WORKDIR /app
+COPY pyproject.toml poetry.lock* ./
+
+# Installer seulement les dependances de production (sans dev)
+RUN poetry install --no-root --only main --no-interaction
+
+# Image finale
+FROM python:3.11-slim
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
+    API_HOST=0.0.0.0 \
+    API_PORT=8000
+
+# Creer un utilisateur non-root
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid appgroup --shell /bin/bash --create-home appuser
+
+# Installer curl pour les health checks
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copier les packages Python depuis le builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Repertoire de travail
+WORKDIR /app
+
+# Copier le code source (seulement ce qui est necessaire pour le serving)
+COPY --chown=appuser:appgroup src/serving/ ./src/serving/
+COPY --chown=appuser:appgroup src/models/recommend.py ./src/models/
+COPY --chown=appuser:appgroup src/utils/ ./src/utils/
+COPY --chown=appuser:appgroup src/__init__.py ./src/
+COPY --chown=appuser:appgroup src/models/__init__.py ./src/models/
+COPY --chown=appuser:appgroup configs/serving.yaml ./configs/
+
+# Creer les repertoires necessaires
+RUN mkdir -p models data/processed && \
+    chown -R appuser:appgroup /app
+
+# Changer vers l'utilisateur non-root
+USER appuser
+
+# Exposer le port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${API_PORT}/health || exit 1
+
+# Commande de demarrage
+CMD ["uvicorn", "src.serving.api:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,0 +1,141 @@
+# Pipeline DVC pour le systeme de recommandation MLOps
+# Chaque etape est reproductible et tracable
+
+stages:
+  download_data:
+    cmd: python -m src.data.download_data
+    deps:
+      - src/data/download_data.py
+    params:
+      - data.dataset_name
+      - data.dataset_url
+      - data.raw_dir
+    outs:
+      - data/raw/ml-latest-small:
+          cache: true
+
+  make_dataset:
+    cmd: python -m src.data.make_dataset
+    deps:
+      - src/data/make_dataset.py
+      - data/raw/ml-latest-small
+    params:
+      - data.raw_dir
+      - data.interim_dir
+      - feedback.type
+      - feedback.rating_threshold
+    outs:
+      - data/interim/interactions.parquet:
+          cache: true
+      - data/interim/movies.parquet:
+          cache: true
+
+  split_dataset:
+    cmd: python -m src.data.split_dataset
+    deps:
+      - src/data/split_dataset.py
+      - data/interim/interactions.parquet
+    params:
+      - data.interim_dir
+      - data.processed_dir
+      - split.train_ratio
+      - split.val_ratio
+      - split.test_ratio
+      - split.temporal_split
+      - split.min_user_interactions
+      - split.min_item_interactions
+    outs:
+      - data/processed/train.parquet:
+          cache: true
+      - data/processed/val.parquet:
+          cache: true
+      - data/processed/test.parquet:
+          cache: true
+      - data/processed/user_encoder.joblib:
+          cache: true
+      - data/processed/item_encoder.joblib:
+          cache: true
+
+  build_features:
+    cmd: python -m src.features.build_features
+    deps:
+      - src/features/build_features.py
+      - data/processed/train.parquet
+      - data/processed/val.parquet
+    params:
+      - data.processed_dir
+      - features.normalize_ratings
+      - features.compute_popularity
+      - features.popularity_decay
+      - feedback.type
+    outs:
+      - data/processed/train_matrix.npz:
+          cache: true
+      - data/processed/val_matrix.npz:
+          cache: true
+      - data/processed/item_popularity.parquet:
+          cache: true
+      - data/processed/feature_metadata.json:
+          cache: true
+
+  train:
+    cmd: python -m src.models.train
+    deps:
+      - src/models/train.py
+      - data/processed/train_matrix.npz
+      - data/processed/feature_metadata.json
+    params:
+      - model.type
+      - model.embedding_dim
+      - model.regularization
+      - model.iterations
+      - model.alpha
+      - train.random_seed
+      - train.use_gpu
+      - train.log_to_mlflow
+      - train.experiment_name
+      - optuna.enabled
+      - optuna.n_trials
+      - optuna.metric
+    outs:
+      - models/model.joblib:
+          cache: true
+    metrics:
+      - models/train_metrics.json:
+          cache: false
+
+  evaluate:
+    cmd: python -m src.models.evaluate
+    deps:
+      - src/models/evaluate.py
+      - models/model.joblib
+      - data/processed/val_matrix.npz
+      - data/processed/test.parquet
+      - data/processed/user_encoder.joblib
+      - data/processed/item_encoder.joblib
+    params:
+      - eval.k_values
+      - eval.compute_rmse
+      - eval.compute_ranking_metrics
+      - feedback.type
+    metrics:
+      - models/eval_metrics.json:
+          cache: false
+    plots:
+      - models/metrics_by_k.csv:
+          cache: false
+
+  register:
+    cmd: python -m src.models.register
+    deps:
+      - src/models/register.py
+      - models/model.joblib
+      - models/eval_metrics.json
+      - data/processed/user_encoder.joblib
+      - data/processed/item_encoder.joblib
+      - data/processed/item_popularity.parquet
+    params:
+      - train.experiment_name
+    outs:
+      - models/registered_model_info.json:
+          cache: false

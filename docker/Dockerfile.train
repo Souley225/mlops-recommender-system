@@ -1,0 +1,64 @@
+# Image Docker pour l'entrainement du modele de recommandation
+# Inclut DVC, MLflow, et toutes les dependances d'entrainement
+
+FROM python:3.11-slim as builder
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    POETRY_VERSION=1.7.1 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_CREATE=false \
+    POETRY_NO_INTERACTION=1
+
+# Installer Poetry
+RUN pip install "poetry==${POETRY_VERSION}"
+
+# Copier les fichiers de dependances
+WORKDIR /app
+COPY pyproject.toml poetry.lock* ./
+
+# Installer les dependances
+RUN poetry install --no-root --only main
+
+# Image finale
+FROM python:3.11-slim
+
+# Variables d'environnement
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
+
+# Creer un utilisateur non-root
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid appgroup --shell /bin/bash --create-home appuser
+
+# Installer les dependances systeme
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copier les packages Python depuis le builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Repertoire de travail
+WORKDIR /app
+
+# Copier le code source
+COPY --chown=appuser:appgroup src/ ./src/
+COPY --chown=appuser:appgroup configs/ ./configs/
+COPY --chown=appuser:appgroup params.yaml dvc.yaml ./
+
+# Creer les repertoires necessaires
+RUN mkdir -p data/raw data/interim data/processed models && \
+    chown -R appuser:appgroup /app
+
+# Changer vers l'utilisateur non-root
+USER appuser
+
+# Commande par defaut
+CMD ["python", "-m", "src.models.train"]

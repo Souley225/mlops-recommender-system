@@ -1,0 +1,36 @@
+# Configuration du modele
+# Parametres pour les differents algorithmes de recommandation
+
+# Type de modele: popularity, als, svd, implicit
+type: als
+
+# Dimension des embeddings (facteurs latents)
+embedding_dim: 64
+
+# Regularisation L2
+regularization: 0.01
+
+# Nombre d'iterations d'entrainement
+iterations: 15
+
+# Parametre alpha pour le feedback implicite (confiance)
+alpha: 40
+
+# Configuration specifique ALS
+als:
+  use_native: true
+  use_cg: true
+  calculate_training_loss: true
+
+# Configuration specifique SVD (Surprise)
+svd:
+  n_epochs: 20
+  lr_all: 0.005
+  reg_all: 0.02
+  biased: true
+
+# Configuration du modele de popularite
+popularity:
+  time_decay: true
+  decay_factor: 0.95
+  recency_weight: 0.3

@@ -1,0 +1,54 @@
+# Configuration de l'entrainement
+# Parametres pour le processus d'entrainement et l'optimisation
+
+# Graine aleatoire pour la reproductibilite
+random_seed: 42
+
+# Utiliser le GPU si disponible
+use_gpu: false
+
+# Activer le logging MLflow
+log_to_mlflow: true
+
+# Nom de l'experience MLflow
+experiment_name: mlops-recommender
+
+# Configuration Optuna pour l'optimisation des hyperparametres
+optuna:
+  enabled: true
+  n_trials: 20
+  timeout: null  # Timeout en secondes, null pour pas de limite
+  metric: ndcg_at_10  # Metrique a optimiser
+  direction: maximize  # maximize ou minimize
+  sampler: tpe  # tpe, random, ou cmaes
+  pruner: median  # median, hyperband, ou none
+  
+  # Espace de recherche des hyperparametres
+  search_space:
+    embedding_dim:
+      low: 16
+      high: 128
+      step: 16
+    regularization:
+      low: 0.001
+      high: 0.1
+      log: true
+    alpha:
+      low: 10
+      high: 100
+      step: 10
+    iterations:
+      low: 5
+      high: 30
+      step: 5
+
+# Configuration du batch (si applicable)
+batch:
+  size: 1024
+  shuffle: true
+
+# Early stopping
+early_stopping:
+  enabled: true
+  patience: 5
+  min_delta: 0.001

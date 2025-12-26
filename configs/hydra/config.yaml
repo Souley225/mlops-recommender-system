@@ -1,0 +1,29 @@
+# Configuration principale Hydra
+# Point d'entree pour toutes les configurations du projet
+
+defaults:
+  - data
+  - model
+  - train
+  - eval
+  - serving
+  - logging
+  - _self_
+
+# Nom de l'experience MLflow
+experiment_name: mlops-recommender
+
+# Graine aleatoire pour la reproductibilite
+random_seed: 42
+
+# Mode de fonctionnement: train, evaluate, serve
+mode: train
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  job:
+    chdir: false

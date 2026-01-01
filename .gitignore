@@ -94,6 +94,7 @@ mlartifacts/
 # Hydra
 outputs/
 multirun/
+test_load.py
 
 # OS
 .DS_Store

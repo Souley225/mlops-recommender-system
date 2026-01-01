@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#
 """
 API FastAPI pour le systeme de recommandation.
 

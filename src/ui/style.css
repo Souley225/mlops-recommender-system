@@ -147,51 +147,60 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"] {
     transition: var(--transition);
 }
 
-/* SELECTBOX - Forcer le texte noir dans la box */
-.stSelectbox,
-.stSelectbox>div,
-.stSelectbox>div>div,
-.stSelectbox [data-baseweb="select"],
-.stSelectbox [data-baseweb="select"]>div,
-.stSelectbox [data-baseweb="select"]>div>div,
-.stSelectbox [data-baseweb="select"] span,
-.stSelectbox [data-baseweb="select"] div {
+/* --- ULTIMATE SELECTBOX FIX --- */
+
+/* 1. Main container: White background, rounded corners */
+.stSelectbox>div>div {
+    background-color: #FFFFFF !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 10px !important;
     color: #1E293B !important;
 }
 
-/* Valeur selectionnee dans la box */
-[data-baseweb="select"] [class*="ValueContainer"],
-[data-baseweb="select"] [class*="singleValue"],
-[data-baseweb="select"] [class*="placeholder"],
-[data-baseweb="select"] [class*="Input"] input {
+/* 2. Text Input inside Selectbox: MUST be transparent to show value behind it */
+.stSelectbox input {
+    background-color: transparent !important;
+    color: #1E293B !important;
+    box-shadow: none !important;
+    caret-color: #000000 !important;
+}
+
+/* 3. The Value Container (Text): selected item */
+div[data-baseweb="select"]>div {
+    background-color: transparent !important;
     color: #1E293B !important;
 }
 
-/* Force sur tous les enfants du select sauf icones */
-[data-baseweb="select"] div:not([class*="Icon"]),
-[data-baseweb="select"] span {
+/* 4. FORCE ALL TEXT VISIBILITY inside Selectbox */
+.stSelectbox [data-baseweb="select"] * {
     color: #1E293B !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
-/* Menu dropdown - fond blanc, texte gris fonce */
-[data-baseweb="popover"],
-[data-baseweb="menu"],
-[data-baseweb="list"] {
-    background: #FFFFFF !important;
+/* 5. Dropdown Menu (Popover) */
+div[data-baseweb="popover"],
+div[data-baseweb="menu"],
+ul[role="listbox"] {
+    background-color: #FFFFFF !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
 }
 
-[data-baseweb="popover"] li,
-[data-baseweb="menu"] li,
-[data-baseweb="list"] li,
-[data-baseweb="menu"] div,
-[data-baseweb="list"] div {
+/* Dropdown items */
+li[role="option"],
+li[role="option"] div,
+li[role="option"] span {
     color: #374151 !important;
-    background: transparent !important;
+    /* Dark grey */
+    background-color: transparent !important;
 }
 
-[data-baseweb="menu"] li:hover,
-[data-baseweb="list"] li:hover {
-    background: #F3F4F6 !important;
+/* Hover state */
+li[role="option"]:hover,
+li[role="option"][aria-selected="true"] {
+    background-color: #F1F5F9 !important;
+    color: #000000 !important;
 }
 
 .stSelectbox>div>div:focus-within,

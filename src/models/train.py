@@ -17,11 +17,20 @@ from typing import Any, Callable, Dict, Optional, Tuple, Union
 import numpy as np
 import optuna
 import yaml
-from implicit.als import AlternatingLeastSquares
+try:
+    from implicit.als import AlternatingLeastSquares
+    HAS_IMPLICIT = True
+except ImportError:
+    AlternatingLeastSquares = None  # type: ignore
+    HAS_IMPLICIT = False
 from scipy import sparse
 from scipy.sparse import csr_matrix
-from surprise import SVD, Dataset, Reader
-from surprise.model_selection import cross_validate
+try:
+    from surprise import SVD, Dataset, Reader
+except ImportError:
+    SVD = None  # type: ignore
+    Dataset = None  # type: ignore
+    Reader = None  # type: ignore
 
 from src.utils.io import load_json, load_sparse_matrix, save_joblib, save_json
 from src.utils.logging import get_logger

@@ -1,0 +1,282 @@
+/* Police moderne */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Variables */
+:root {
+    --primary: #6366F1;
+    /* Indigo moderne */
+    --primary-light: #818CF8;
+    --primary-dark: #4F46E5;
+    --accent: #10B981;
+    /* Vert emeraude */
+    --text: #1E293B;
+    --text-light: #64748B;
+    --bg: #F8FAFC;
+    --card: #FFFFFF;
+    --border: #E2E8F0;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+    --transition: all 0.2s ease;
+}
+
+/* Reset */
+* {
+    box-sizing: border-box;
+}
+
+/* Application */
+.stApp {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+    min-height: 100vh;
+}
+
+/* Typographie */
+h1 {
+    font-size: 2rem !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+    letter-spacing: -0.02em;
+}
+
+h2 {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: var(--text) !important;
+}
+
+p,
+span,
+label {
+    color: var(--text-light);
+}
+
+/* Force dark text everywhere */
+.stApp,
+.stApp p,
+.stApp span,
+.stApp label,
+.stApp div,
+.stMarkdown,
+.stMarkdown p,
+.stCaption,
+.stCaption p {
+    color: var(--text) !important;
+}
+
+/* Texte secondaire */
+.stCaption,
+small,
+.stApp small {
+    color: var(--text-light) !important;
+}
+
+/* Onglets non selectionnés */
+.stTabs [data-baseweb="tab"]:not([aria-selected="true"]) {
+    color: var(--text) !important;
+}
+
+/* Sidebar moderne */
+section[data-testid="stSidebar"] {
+    background: var(--card) !important;
+    border-right: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+section[data-testid="stSidebar"]>div {
+    padding-top: 2rem;
+}
+
+/* Navigation tabs style */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 8px;
+    background: var(--card);
+    padding: 8px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+
+.stTabs [data-baseweb="tab"] {
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.stTabs [aria-selected="true"] {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+/* Boutons */
+.stButton>button {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 28px !important;
+    font-weight: 500 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+    transition: var(--transition) !important;
+    letter-spacing: 0.01em;
+}
+
+.stButton>button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
+}
+
+/* Cartes / Containers */
+div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"] {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+/* Inputs */
+.stSelectbox>div>div,
+.stTextInput>div>div>input {
+    background: #FFFFFF !important;
+    border: 2px solid var(--border) !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    transition: var(--transition);
+}
+
+/* SELECTBOX - Forcer le texte noir dans la box */
+.stSelectbox,
+.stSelectbox>div,
+.stSelectbox>div>div,
+.stSelectbox [data-baseweb="select"],
+.stSelectbox [data-baseweb="select"]>div,
+.stSelectbox [data-baseweb="select"]>div>div,
+.stSelectbox [data-baseweb="select"] span,
+.stSelectbox [data-baseweb="select"] div {
+    color: #1E293B !important;
+}
+
+/* Valeur selectionnee dans la box */
+[data-baseweb="select"] [class*="ValueContainer"],
+[data-baseweb="select"] [class*="singleValue"],
+[data-baseweb="select"] [class*="placeholder"],
+[data-baseweb="select"] [class*="Input"] input {
+    color: #1E293B !important;
+}
+
+/* Force sur tous les enfants du select sauf icones */
+[data-baseweb="select"] div:not([class*="Icon"]),
+[data-baseweb="select"] span {
+    color: #1E293B !important;
+}
+
+/* Menu dropdown - fond blanc, texte gris fonce */
+[data-baseweb="popover"],
+[data-baseweb="menu"],
+[data-baseweb="list"] {
+    background: #FFFFFF !important;
+}
+
+[data-baseweb="popover"] li,
+[data-baseweb="menu"] li,
+[data-baseweb="list"] li,
+[data-baseweb="menu"] div,
+[data-baseweb="list"] div {
+    color: #374151 !important;
+    background: transparent !important;
+}
+
+[data-baseweb="menu"] li:hover,
+[data-baseweb="list"] li:hover {
+    background: #F3F4F6 !important;
+}
+
+.stSelectbox>div>div:focus-within,
+.stTextInput>div>div>input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* Metriques */
+div[data-testid="stMetric"] {
+    background: linear-gradient(135deg, var(--card) 0%, #F1F5F9 100%);
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+div[data-testid="stMetric"]:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+div[data-testid="stMetricValue"] {
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    color: var(--primary) !important;
+}
+
+/* Tableaux */
+.stDataFrame {
+    border-radius: var(--radius) !important;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+/* Progress bars */
+.stProgress>div>div>div>div {
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%) !important;
+    border-radius: 999px;
+}
+
+/* Alertes */
+.stSuccess {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%) !important;
+    border: none !important;
+    border-left: 4px solid var(--accent) !important;
+    border-radius: 0 var(--radius) var(--radius) 0 !important;
+    padding: 1rem 1.25rem !important;
+}
+
+.stInfo {
+    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%) !important;
+    border: none !important;
+    border-left: 4px solid var(--primary) !important;
+    border-radius: 0 var(--radius) var(--radius) 0 !important;
+}
+
+/* Slider */
+.stSlider>div>div>div {
+    background: var(--primary) !important;
+}
+
+/* Checkbox */
+.stCheckbox {
+    padding: 8px 0;
+}
+
+/* Spinner */
+.stSpinner>div {
+    border-top-color: var(--primary) !important;
+}
+
+/* Animations subtiles */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.element-container {
+    animation: fadeIn 0.3s ease-out;
+}

@@ -33,6 +33,8 @@ from src.utils.metrics import (
 )
 from src.utils.mlflow_utils import log_metrics, setup_mlflow, start_run
 from src.utils.paths import MODELS_DIR, PROCESSED_DATA_DIR, PROJECT_ROOT
+# Import model classes so joblib can find them when deserializing
+from src.models.train import PopularityModel, ALSModel  # noqa: F401
 
 logger = get_logger(__name__)
 

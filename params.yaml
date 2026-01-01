@@ -33,7 +33,7 @@ features:
 
 # Configuration du modele
 model:
-  type: als  # popularity, als, svd, implicit
+  type: popularity  # popularity, als, svd, implicit
   embedding_dim: 64
   regularization: 0.01
   iterations: 15

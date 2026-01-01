@@ -15,7 +15,7 @@ Ce guide explique comment installer, configurer et deployer le systeme de recomm
 ### 1. Cloner le Repository
 
 ```bash
-git clone https://github.com/your-org/mlops-recommender-system.git
+git clone https://github.com/souley225/mlops-recommender-system.git
 cd mlops-recommender-system
 ```
 

@@ -13,6 +13,9 @@ import numpy as np
 import pandas as pd
 from scipy.sparse import csr_matrix
 
+# Import model classes FIRST so joblib can find them when deserializing
+from src.models.train import PopularityModel, ALSModel  # noqa: F401
+
 from src.utils.io import load_joblib, load_json, load_parquet, load_sparse_matrix
 from src.utils.logging import get_logger
 from src.utils.paths import MODELS_DIR, PROCESSED_DATA_DIR

@@ -160,6 +160,12 @@ def load_joblib(filepath: Union[str, Path]) -> Any:
     filepath = Path(filepath)
     if not filepath.exists():
         raise FileNotFoundError(f"Fichier Joblib non trouve: {filepath}")
+    # Import model classes before loading to ensure they're registered with Python
+    # This is necessary for joblib to find the class when deserializing
+    try:
+        from src.models.train import PopularityModel, ALSModel  # noqa: F401
+    except ImportError:
+        pass  # Model classes might not be needed for all joblib files
     return joblib.load(filepath)
 
 

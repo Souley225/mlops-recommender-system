@@ -84,7 +84,9 @@ dmypy.json
 /data/raw/
 /data/processed/
 /data/interim/
-/models/
+!models/
+!models/*.joblib
+!models/*.json
 *.dvc.lock
 
 # MLflow

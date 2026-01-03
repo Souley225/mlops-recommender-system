@@ -1,5 +1,5 @@
 # Configuration Render pour le deploiement
-# Optimise pour deploiement fonctionnel
+# Utilise pip avec wheels binaires pour eviter la compilation
 
 services:
   # API FastAPI
@@ -7,13 +7,15 @@ services:
     name: mlops-recommender-api
     env: python
     plan: free
-    buildCommand: pip install poetry && poetry config virtualenvs.create false && poetry install --only main
+    buildCommand: pip install --prefer-binary -r requirements.txt
     startCommand: uvicorn src.serving.api:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: LOG_LEVEL
         value: INFO
       - key: LOG_FORMAT
         value: json
+      - key: PYTHONPATH
+        value: /opt/render/project/src
     healthCheckPath: /health
 
   # UI Streamlit
@@ -21,8 +23,10 @@ services:
     name: mlops-recommender-ui
     env: python
     plan: free
-    buildCommand: pip install poetry && poetry config virtualenvs.create false && poetry install --only main
+    buildCommand: pip install --prefer-binary -r requirements.txt
     startCommand: streamlit run src/ui/app.py --server.port $PORT --server.address 0.0.0.0
     envVars:
       - key: API_URL
         value: https://mlops-recommender-api.onrender.com
+      - key: PYTHONPATH
+        value: /opt/render/project/src

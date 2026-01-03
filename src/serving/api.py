@@ -49,17 +49,25 @@ async def lifespan(app: FastAPI):
 
     logger.info("Demarrage de l'API de recommandation")
 
-    # Charger le recommandeur
-    try:
-        recommender = Recommender().load()
-        logger.info(
-            "Recommandeur charge avec succes",
-            n_users=len(recommender.get_all_users()),
-            n_items=len(recommender.get_all_items()),
-        )
-    except Exception as e:
-        logger.error("Erreur lors du chargement du recommandeur", error=str(e))
-        recommender = None
+    # Charger le recommandeur avec retry
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            recommender = Recommender().load()
+            logger.info(
+                "Recommandeur charge avec succes",
+                n_users=len(recommender.get_all_users()),
+                n_items=len(recommender.get_all_items()),
+            )
+            break
+        except Exception as e:
+            logger.error(
+                f"Tentative {attempt + 1}/{max_retries} echouee",
+                error=str(e),
+            )
+            if attempt == max_retries - 1:
+                logger.error("Impossible de charger le recommandeur apres plusieurs tentatives")
+                recommender = None
 
     yield
 

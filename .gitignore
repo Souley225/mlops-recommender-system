@@ -82,8 +82,7 @@ dmypy.json
 
 # DVC
 /data/raw/
-/data/processed/
-/data/interim/
+# Note: processed/ et interim/ inclus pour le deploiement Render
 !models/
 !models/*.joblib
 !models/*.json

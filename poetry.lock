@@ -5067,22 +5067,6 @@ maintenance = ["conda-lock (==3.0.1)"]
 tests = ["matplotlib (>=3.6.1)", "mypy (>=1.15)", "numpydoc (>=1.2.0)", "pandas (>=1.5.0)", "polars (>=0.20.30)", "pooch (>=1.8.0)", "pyamg (>=5.0.0)", "pyarrow (>=12.0.0)", "pytest (>=7.1.2)", "pytest-cov (>=2.9.0)", "ruff (>=0.11.7)"]
 
 [[package]]
-name = "scikit-surprise"
-version = "1.1.4"
-description = "An easy-to-use library for recommender systems."
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "scikit_surprise-1.1.4.tar.gz", hash = "sha256:130c45feaee9de4b8cba0aff413ad9b51b2d5c5c90d41aee4759e00059913752"},
-]
-
-[package.dependencies]
-joblib = ">=1.2.0"
-numpy = ">=1.19.5"
-scipy = ">=1.6.0"
-
-[[package]]
 name = "scipy"
 version = "1.16.3"
 description = "Fundamental algorithms for scientific computing in Python"
@@ -6347,4 +6331,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.11"
-content-hash = "3e7747d15d2c0c3bf4e82f34b9f91734e772adda6990d7b0c3b8288a9bb23653"
+content-hash = "0609936b57cb63de5de08e818d52abe1e0aa3d73b0850292629d467ba755abea"

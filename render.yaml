@@ -1,5 +1,5 @@
 # Configuration Render pour le deploiement
-# Ce fichier peut etre utilise avec Render Blueprints
+# Optimise pour deploiement fonctionnel
 
 services:
   # API FastAPI
@@ -10,15 +10,13 @@ services:
     buildCommand: pip install poetry && poetry config virtualenvs.create false && poetry install --only main
     startCommand: uvicorn src.serving.api:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: MLFLOW_TRACKING_URI
-        value: mlruns
       - key: LOG_LEVEL
         value: INFO
       - key: LOG_FORMAT
         value: json
     healthCheckPath: /health
 
-  # UI Streamlit (optionnel)
+  # UI Streamlit
   - type: web
     name: mlops-recommender-ui
     env: python
@@ -27,7 +25,4 @@ services:
     startCommand: streamlit run src/ui/app.py --server.port $PORT --server.address 0.0.0.0
     envVars:
       - key: API_URL
-        fromService:
-          type: web
-          name: mlops-recommender-api
-          property: host
+        value: https://mlops-recommender-api.onrender.com

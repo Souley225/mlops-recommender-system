@@ -163,7 +163,7 @@ def load_joblib(filepath: Union[str, Path]) -> Any:
     # Import model classes before loading to ensure they're registered with Python
     # This is necessary for joblib to find the class when deserializing
     try:
-        from src.models.train import PopularityModel, ALSModel  # noqa: F401
+        from src.models.model_classes import PopularityModel, ALSModel  # noqa: F401
     except ImportError:
         pass  # Model classes might not be needed for all joblib files
     return joblib.load(filepath)

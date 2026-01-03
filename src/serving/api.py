@@ -23,7 +23,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 # Import model classes FIRST so joblib can find them when deserializing
-from src.models.train import PopularityModel, ALSModel  # noqa: F401
+from src.models.model_classes import PopularityModel, ALSModel  # noqa: F401
 from src.models.recommend import Recommender
 from src.utils.logging import configure_logging, get_logger
 

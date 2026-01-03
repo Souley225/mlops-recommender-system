@@ -1,0 +1,24 @@
+# Workflow pour garder les services Render actifs
+# Ping l'API toutes les 10 minutes pour eviter la mise en veille
+
+name: Keep Alive
+
+on:
+  schedule:
+    # Toutes les 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch:  # Permet de lancer manuellement
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping API Health
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" https://mlops-recommender-system-1.onrender.com/health || true
+          echo "API pinged"
+      
+      - name: Ping UI
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" https://mlops-recommender-ui.onrender.com || true
+          echo "UI pinged"

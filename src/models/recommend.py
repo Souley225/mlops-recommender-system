@@ -16,7 +16,7 @@ from scipy.sparse import csr_matrix
 # Import model classes FIRST so joblib can find them when deserializing
 from src.models.train import PopularityModel, ALSModel  # noqa: F401
 
-from src.utils.io import load_joblib, load_json, load_parquet, load_sparse_matrix
+from src.utils.io import load_csv, load_joblib, load_json, load_sparse_matrix
 from src.utils.logging import get_logger
 from src.utils.paths import MODELS_DIR, PROCESSED_DATA_DIR
 
@@ -82,14 +82,14 @@ class Recommender:
         self.metadata = load_json(self.data_path / "feature_metadata.json")
 
         # Charger la popularite des items (optionnel)
-        popularity_path = self.data_path / "item_popularity.parquet"
+        popularity_path = self.data_path / "item_popularity.csv"
         if popularity_path.exists():
-            self.item_popularity = load_parquet(popularity_path)
+            self.item_popularity = load_csv(popularity_path)
 
         # Charger les infos des films (optionnel)
-        movies_path = self.data_path.parent / "interim" / "movies.parquet"
+        movies_path = self.data_path.parent / "interim" / "movies.csv"
         if movies_path.exists():
-            self.movies_df = load_parquet(movies_path)
+            self.movies_df = load_csv(movies_path)
 
         self._loaded = True
 

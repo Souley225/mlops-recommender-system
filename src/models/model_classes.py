@@ -42,6 +42,22 @@ class PopularityModel:
         top_scores = scores[top_indices]
         return top_indices, top_scores
 
+    def similar_items(self, item_idx: int, n: int = 10) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Retourne les items les plus populaires comme fallback.
+        
+        Le modele de popularite n'a pas de notion de similarite entre items,
+        donc on retourne les items les plus populaires (hors l'item de reference).
+        """
+        if self.item_scores is None:
+            raise ValueError("Le modele n'a pas ete entraine")
+        scores = self.item_scores.copy()
+        # Exclure l'item de reference
+        scores[item_idx] = -np.inf
+        top_indices = np.argsort(scores)[::-1][:n]
+        top_scores = scores[top_indices]
+        return top_indices, top_scores
+
 
 class ALSModel:
     """Modele ALS pour feedback implicite."""

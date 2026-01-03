@@ -393,6 +393,46 @@ async def list_items(
     )
 
 
+@app.get("/items-with-metadata", tags=["Data"])
+async def list_items_with_metadata(
+    limit: int = Query(default=100, ge=1, le=1000, description="Nombre max d'items"),
+    offset: int = Query(default=0, ge=0, description="Offset pour la pagination"),
+) -> Dict[str, Any]:
+    """
+    Liste les items avec leurs metadonnees (titre, genres).
+
+    Args:
+        limit: Nombre maximum d'items a retourner.
+        offset: Offset pour la pagination.
+
+    Returns:
+        Liste des items avec leurs metadonnees.
+    """
+    if recommender is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Le modele de recommandation n'est pas disponible",
+        )
+
+    all_items = recommender.get_all_items()
+    paginated = all_items[offset : offset + limit]
+
+    items_data = []
+    for item_id in paginated:
+        item_info = {"item_id": item_id, "title": f"Film #{item_id}", "genres": ""}
+        if recommender.movies_df is not None:
+            movie = recommender.movies_df[recommender.movies_df["item_id"] == item_id]
+            if not movie.empty:
+                item_info["title"] = movie.iloc[0].get("title", f"Film #{item_id}")
+                item_info["genres"] = movie.iloc[0].get("genres", "")
+        items_data.append(item_info)
+
+    return {
+        "items": items_data,
+        "count": len(all_items),
+    }
+
+
 @app.get("/user/{user_id}/history", tags=["Data"])
 async def get_user_history(user_id: int) -> Dict[str, Any]:
     """

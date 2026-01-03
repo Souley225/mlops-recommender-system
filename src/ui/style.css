@@ -1,55 +1,76 @@
-/* Police moderne */
+/* =============================================================================
+   Police moderne
+   ============================================================================= */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Variables */
+/* =============================================================================
+   Variables Design System
+   ============================================================================= */
 :root {
+    /* Couleurs principales */
     --primary: #6366F1;
-    /* Indigo moderne */
     --primary-light: #818CF8;
     --primary-dark: #4F46E5;
     --accent: #10B981;
-    /* Vert emeraude */
+    --accent-light: #34D399;
+
+    /* Texte */
     --text: #1E293B;
     --text-light: #64748B;
+    --text-muted: #94A3B8;
+
+    /* Fonds */
     --bg: #F8FAFC;
+    --bg-secondary: #F1F5F9;
     --card: #FFFFFF;
     --border: #E2E8F0;
+
+    /* Ombres */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+    /* Rayons */
+    --radius-sm: 8px;
     --radius: 12px;
+    --radius-lg: 16px;
+
+    /* Transitions */
     --transition: all 0.2s ease;
+    --transition-slow: all 0.3s ease;
 }
 
-/* Reset */
+/* =============================================================================
+   Reset & Base
+   ============================================================================= */
 * {
     box-sizing: border-box;
 }
 
-/* Application */
 .stApp {
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 100%);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #F8FAFC 0%, #EEF2FF 50%, #F0FDF4 100%);
     min-height: 100vh;
 }
 
-/* Typographie */
+/* =============================================================================
+   Typographie
+   ============================================================================= */
 h1 {
     font-size: 2rem !important;
     font-weight: 700 !important;
     color: var(--text) !important;
     letter-spacing: -0.02em;
+    line-height: 1.2 !important;
 }
 
-h2 {
+h2,
+h3 {
     font-size: 1.25rem !important;
     font-weight: 600 !important;
     color: var(--text) !important;
-}
-
-p,
-span,
-label {
-    color: var(--text-light);
+    margin-bottom: 0.5rem !important;
 }
 
 /* Force dark text everywhere */
@@ -59,25 +80,22 @@ label {
 .stApp label,
 .stApp div,
 .stMarkdown,
-.stMarkdown p,
-.stCaption,
-.stCaption p {
+.stMarkdown p {
     color: var(--text) !important;
 }
 
-/* Texte secondaire */
+/* Captions et texte secondaire */
 .stCaption,
+.stCaption p,
 small,
 .stApp small {
     color: var(--text-light) !important;
+    font-size: 0.875rem !important;
 }
 
-/* Onglets non selectionnés */
-.stTabs [data-baseweb="tab"]:not([aria-selected="true"]) {
-    color: var(--text) !important;
-}
-
-/* Sidebar moderne */
+/* =============================================================================
+   Sidebar
+   ============================================================================= */
 section[data-testid="stSidebar"] {
     background: var(--card) !important;
     border-right: 1px solid var(--border);
@@ -88,35 +106,48 @@ section[data-testid="stSidebar"]>div {
     padding-top: 2rem;
 }
 
-/* Navigation tabs style */
+/* =============================================================================
+   Navigation Tabs
+   ============================================================================= */
 .stTabs [data-baseweb="tab-list"] {
     gap: 8px;
     background: var(--card);
-    padding: 8px;
+    padding: 8px 12px;
     border-radius: var(--radius);
     border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 .stTabs [data-baseweb="tab"] {
-    border-radius: 8px;
-    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    padding: 12px 20px;
     font-weight: 500;
+    font-size: 0.9rem;
     transition: var(--transition);
+    color: var(--text) !important;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background: var(--bg-secondary);
 }
 
 .stTabs [aria-selected="true"] {
-    background: var(--primary) !important;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
     color: white !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
-/* Boutons */
+/* =============================================================================
+   Boutons
+   ============================================================================= */
 .stButton>button {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
     color: white !important;
     border: none !important;
-    padding: 12px 28px !important;
-    font-weight: 500 !important;
-    border-radius: 10px !important;
+    padding: 14px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    border-radius: var(--radius) !important;
     box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
     transition: var(--transition) !important;
     letter-spacing: 0.01em;
@@ -127,153 +158,250 @@ section[data-testid="stSidebar"]>div {
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45);
 }
 
-/* Cartes / Containers */
-div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"] {
+.stButton>button:active {
+    transform: translateY(0);
+}
+
+/* =============================================================================
+   Info Box Styling (for context/tips)
+   ============================================================================= */
+.stAlert {
+    border-radius: var(--radius) !important;
+    padding: 1rem 1.25rem !important;
+    border: none !important;
+}
+
+/* Info box - for tips and context */
+div[data-testid="stAlert"]:has(.stInfo),
+.stInfo {
+    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%) !important;
+    border-left: 4px solid var(--primary) !important;
+    border-radius: 0 var(--radius) var(--radius) 0 !important;
+}
+
+/* Success box */
+.stSuccess {
+    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%) !important;
+    border-left: 4px solid var(--accent) !important;
+    border-radius: 0 var(--radius) var(--radius) 0 !important;
+}
+
+/* Warning box */
+.stWarning {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%) !important;
+    border-left: 4px solid #F59E0B !important;
+    border-radius: 0 var(--radius) var(--radius) 0 !important;
+}
+
+/* Error box */
+.stError {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%) !important;
+    border-left: 4px solid #EF4444 !important;
+    border-radius: 0 var(--radius) var(--radius) 0 !important;
+}
+
+/* =============================================================================
+   Expanders (Progressive Disclosure)
+   ============================================================================= */
+.streamlit-expanderHeader {
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    color: var(--text) !important;
+    background: var(--bg-secondary) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.75rem 1rem !important;
+    transition: var(--transition);
+}
+
+.streamlit-expanderHeader:hover {
+    background: #E2E8F0 !important;
+}
+
+.streamlit-expanderContent {
     background: var(--card);
-    border-radius: var(--radius);
-    padding: 1.5rem;
     border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
+    border-top: none;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    padding: 1rem !important;
 }
 
-/* Inputs */
-.stSelectbox>div>div,
-.stTextInput>div>div>input {
-    background: #FFFFFF !important;
-    border: 2px solid var(--border) !important;
-    border-radius: 10px !important;
-    padding: 10px 14px !important;
-    transition: var(--transition);
-}
+/* =============================================================================
+   Form Inputs
+   ============================================================================= */
 
-/* --- ULTIMATE SELECTBOX FIX --- */
-
-/* 1. Main container: White background, rounded corners */
+/* Selectbox */
 .stSelectbox>div>div {
     background-color: #FFFFFF !important;
     border: 2px solid var(--border) !important;
-    border-radius: 10px !important;
-    color: #1E293B !important;
+    border-radius: var(--radius-sm) !important;
+    transition: var(--transition);
 }
 
-/* 2. Text Input inside Selectbox: MUST be transparent to show value behind it */
-.stSelectbox input {
-    background-color: transparent !important;
-    color: #1E293B !important;
-    box-shadow: none !important;
-    caret-color: #000000 !important;
+.stSelectbox>div>div:hover {
+    border-color: #CBD5E1 !important;
 }
 
-/* 3. The Value Container (Text): selected item */
-div[data-baseweb="select"]>div {
-    background-color: transparent !important;
-    color: #1E293B !important;
-}
-
-/* 4. FORCE ALL TEXT VISIBILITY inside Selectbox */
-.stSelectbox [data-baseweb="select"] * {
-    color: #1E293B !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* 5. Dropdown Menu (Popover) */
-div[data-baseweb="popover"],
-div[data-baseweb="menu"],
-ul[role="listbox"] {
-    background-color: #FFFFFF !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Dropdown items */
-li[role="option"],
-li[role="option"] div,
-li[role="option"] span {
-    color: #374151 !important;
-    /* Dark grey */
-    background-color: transparent !important;
-}
-
-/* Hover state */
-li[role="option"]:hover,
-li[role="option"][aria-selected="true"] {
-    background-color: #F1F5F9 !important;
-    color: #000000 !important;
-}
-
-.stSelectbox>div>div:focus-within,
-.stTextInput>div>div>input:focus {
+.stSelectbox>div>div:focus-within {
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-/* Metriques */
-div[data-testid="stMetric"] {
-    background: linear-gradient(135deg, var(--card) 0%, #F1F5F9 100%);
-    padding: 1.25rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
+/* Selectbox text visibility */
+.stSelectbox input {
+    background-color: transparent !important;
+    color: var(--text) !important;
+}
+
+.stSelectbox [data-baseweb="select"] * {
+    color: var(--text) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Dropdown Menu - Force light theme */
+div[data-baseweb="popover"],
+div[data-baseweb="menu"],
+ul[role="listbox"],
+div[data-baseweb="popover"] ul,
+div[data-baseweb="select"] ul {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: var(--shadow-lg) !important;
+}
+
+/* Dropdown items - ensure visibility */
+li[role="option"],
+li[role="option"] div,
+li[role="option"] span,
+div[data-baseweb="menu"] li,
+div[data-baseweb="menu"] li div,
+div[data-baseweb="menu"] li span {
+    color: #1E293B !important;
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+}
+
+/* Hover state */
+li[role="option"]:hover,
+li[role="option"]:hover div,
+li[role="option"]:hover span,
+div[data-baseweb="menu"] li:hover {
+    background-color: #F1F5F9 !important;
+    background: #F1F5F9 !important;
+    color: #1E293B !important;
+}
+
+/* Selected/highlighted item */
+li[role="option"][aria-selected="true"],
+li[role="option"][aria-selected="true"] div,
+li[role="option"][aria-selected="true"] span,
+li[data-highlighted="true"],
+li[data-highlighted="true"] div,
+li[data-highlighted="true"] span {
+    background-color: #EEF2FF !important;
+    background: #EEF2FF !important;
+    color: #4F46E5 !important;
+}
+
+/* Labels with help tooltips */
+.stSelectbox label,
+.stSlider label,
+.stCheckbox label {
+    color: var(--text) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+/* Help tooltip icon */
+.stTooltipIcon {
+    color: var(--text-muted) !important;
+    opacity: 0.7;
     transition: var(--transition);
 }
 
+.stTooltipIcon:hover {
+    opacity: 1;
+    color: var(--primary) !important;
+}
+
+/* =============================================================================
+   Metriques
+   ============================================================================= */
+div[data-testid="stMetric"] {
+    background: linear-gradient(135deg, var(--card) 0%, #F1F5F9 100%);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
 div[data-testid="stMetric"]:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-lg);
 }
 
+div[data-testid="stMetricLabel"] {
+    color: var(--text-light) !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
 div[data-testid="stMetricValue"] {
-    font-size: 1.75rem !important;
+    font-size: 2rem !important;
     font-weight: 700 !important;
     color: var(--primary) !important;
 }
 
-/* Tableaux */
+/* =============================================================================
+   Tableaux
+   ============================================================================= */
 .stDataFrame {
     border-radius: var(--radius) !important;
     overflow: hidden;
     box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
-/* Progress bars */
+/* =============================================================================
+   Progress bars
+   ============================================================================= */
 .stProgress>div>div>div>div {
     background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%) !important;
     border-radius: 999px;
 }
 
-/* Alertes */
-.stSuccess {
-    background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%) !important;
-    border: none !important;
-    border-left: 4px solid var(--accent) !important;
-    border-radius: 0 var(--radius) var(--radius) 0 !important;
-    padding: 1rem 1.25rem !important;
-}
-
-.stInfo {
-    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%) !important;
-    border: none !important;
-    border-left: 4px solid var(--primary) !important;
-    border-radius: 0 var(--radius) var(--radius) 0 !important;
-}
-
-/* Slider */
+/* =============================================================================
+   Slider
+   ============================================================================= */
 .stSlider>div>div>div {
     background: var(--primary) !important;
 }
 
-/* Checkbox */
+/* =============================================================================
+   Checkbox
+   ============================================================================= */
 .stCheckbox {
     padding: 8px 0;
 }
 
-/* Spinner */
+.stCheckbox>label>span {
+    font-weight: 400 !important;
+}
+
+/* =============================================================================
+   Spinner / Loading
+   ============================================================================= */
 .stSpinner>div {
     border-top-color: var(--primary) !important;
 }
 
-/* Animations subtiles */
+/* =============================================================================
+   Animations
+   ============================================================================= */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -286,6 +414,60 @@ div[data-testid="stMetricValue"] {
     }
 }
 
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
 .element-container {
     animation: fadeIn 0.3s ease-out;
+}
+
+/* Loading state animation for info boxes */
+.stInfo[data-loading="true"] {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* =============================================================================
+   Cards / Containers for results
+   ============================================================================= */
+div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"] {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    margin-bottom: 0.5rem;
+}
+
+div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
+    box-shadow: var(--shadow-md);
+    border-color: #CBD5E1;
+}
+
+/* =============================================================================
+   Responsive adjustments
+   ============================================================================= */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.5rem !important;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        padding: 10px 12px;
+        font-size: 0.8rem;
+    }
+
+    .stButton>button {
+        padding: 12px 20px !important;
+        font-size: 0.9rem !important;
+    }
 }

@@ -20,9 +20,9 @@ import streamlit as st
 
 st.set_page_config(
     page_title="Recommandation Films",
-    page_icon="🎬",
+    page_icon="▶",
     layout="wide",
-    initial_sidebar_state="collapsed",  # Sidebar cachee par defaut pour plus d'espace
+    initial_sidebar_state="collapsed",
 )
 
 API_URL = os.getenv("API_URL", "http://localhost:8000")
@@ -70,6 +70,16 @@ def api_items() -> List[int]:
         return []
 
 
+@st.cache_data(ttl=300)
+def api_items_with_metadata() -> List[Dict]:
+    """Liste des films avec titres et genres."""
+    try:
+        r = requests.get(f"{API_URL}/items-with-metadata", params={"limit": 500}, timeout=10)
+        return r.json().get("items", []) if r.ok else []
+    except Exception:
+        return []
+
+
 def api_recommend(user_id: int, k: int, exclude: bool) -> Optional[Dict]:
     """Genere des recommandations."""
     try:
@@ -110,67 +120,103 @@ def api_history(user_id: int) -> Optional[Dict]:
 # =============================================================================
 
 def header() -> None:
-    """Affiche l'en-tete de l'application."""
+    """Affiche l'en-tete de l'application avec statut API."""
     col1, col2 = st.columns([3, 1])
     
     with col1:
         st.title("Recommandation de Films")
-        st.caption("Decouvrez vos prochains films preferes grace a l'IA")
+        st.caption("Decouvrez vos prochains films preferes grace a l'intelligence artificielle")
     
     with col2:
         health = api_health()
         if health and health.get("status") == "healthy":
-            st.success(f"Connecte - {health.get('n_items', 0)} films")
+            st.success(f"● En ligne · {health.get('n_items', 0)} films")
         else:
-            st.error("API deconnectee")
+            st.error("○ Service indisponible")
+
+
+def welcome_section() -> None:
+    """Affiche un guide rapide pour les nouveaux utilisateurs."""
+    # Only show expander, don't modify session state to avoid reruns
+    with st.expander("Comment utiliser cette application ?", expanded=False):
+        st.markdown("""
+        **Bienvenue !** Cette application vous aide a decouvrir des films adaptes a vos gouts.
+        
+        | Onglet | Description |
+        |--------|-------------|
+        | **Recommandations** | Obtenez des suggestions personnalisees selon votre profil |
+        | **Decouvrir** | Trouvez des films similaires a ceux que vous aimez |
+        | **Historique** | Consultez les films que vous avez deja notes |
+        | **Statistiques** | Voyez les chiffres cles du systeme |
+        
+        *Selectionnez un onglet ci-dessous pour commencer.*
+        """)
 
 
 def tab_recommendations() -> None:
-    """Onglet Recommandations."""
+    """Onglet Recommandations avec UX amelioree."""
     st.markdown("### Recommandations Personnalisees")
-    st.markdown("Selectionnez votre profil pour obtenir des suggestions adaptees.")
+    st.info(
+        "Notre algorithme analyse les preferences de votre profil "
+        "pour vous suggerer des films que vous allez adorer."
+    )
     
     users = api_users()
     if not users:
-        st.warning("Impossible de charger les utilisateurs.")
+        st.warning("Impossible de charger les profils utilisateurs.")
+        st.caption("Verifiez que le service API est disponible et reessayez.")
         return
     
-    # Formulaire compact
-    with st.container():
-        col1, col2, col3 = st.columns([2, 1, 1])
-        
-        with col1:
-            user_id = st.selectbox(
-                "Votre profil",
-                users,
-                format_func=lambda x: f"Utilisateur {x}",
-                label_visibility="collapsed",
-                key="rec_user"
-            )
-        
-        with col2:
-            k = st.select_slider(
-                "Nombre",
-                options=[5, 10, 15, 20, 30],
-                value=10,
-                label_visibility="collapsed",
-                key="rec_k"
-            )
-        
-        with col3:
-            exclude = st.checkbox("Nouveaux uniquement", value=True, key="rec_exclude")
+    st.markdown("#### Configuration")
     
-    st.markdown("")  # Espacement
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        user_id = st.selectbox(
+            "Selectionnez votre profil",
+            users,
+            format_func=lambda x: f"Utilisateur #{x}",
+            help="Chaque profil represente un utilisateur avec un historique de notes unique",
+            key="rec_user"
+        )
+    
+    with col2:
+        k = st.select_slider(
+            "Nombre de recommandations",
+            options=[5, 10, 15, 20, 30],
+            value=10,
+            help="Plus le nombre est eleve, plus vous aurez de suggestions",
+            key="rec_k"
+        )
+    
+    # Progressive disclosure for advanced options
+    with st.expander("Options avancees", expanded=False):
+        exclude = st.checkbox(
+            "Exclure les films deja vus",
+            value=True,
+            help="Cochez pour ne voir que des films que vous n'avez pas encore notes",
+            key="rec_exclude"
+        )
+        st.caption("Par defaut, nous excluons les films de votre historique pour privilegier la decouverte.")
+    
+    # Get value from session state (checkbox already stores it)
+    exclude = st.session_state.get("rec_exclude", True)
+    
+    st.markdown("")
     
     if st.button("Obtenir mes recommandations", type="primary", use_container_width=True, key="rec_btn"):
-        with st.spinner("Analyse de votre profil..."):
+        progress_placeholder = st.empty()
+        progress_placeholder.info("Analyse de votre profil en cours...")
+        
+        with st.spinner(""):
             data = api_recommend(user_id, k, exclude)
+        
+        progress_placeholder.empty()
         
         if data and data.get("recommendations"):
             recs = data["recommendations"]
             st.success(f"{len(recs)} films recommandes pour vous")
             
-            # Affichage en grille de cartes
             for i in range(0, len(recs), 2):
                 cols = st.columns(2)
                 for j, col in enumerate(cols):
@@ -178,50 +224,66 @@ def tab_recommendations() -> None:
                         rec = recs[i + j]
                         with col:
                             with st.container():
-                                title = rec.get("title") or f"Film {rec['item_id']}"
+                                title = rec.get("title") or f"Film #{rec['item_id']}"
                                 st.markdown(f"**{title}**")
-                                st.caption(rec.get("genres", ""))
+                                if rec.get("genres"):
+                                    st.caption(rec.get("genres"))
                                 st.progress(min(rec["score"], 1.0))
-                                st.caption(f"Pertinence: {rec['score']:.1%}")
+                                st.caption(f"Pertinence : {rec['score']:.1%}")
         else:
             st.info("Aucune recommandation disponible pour ce profil.")
+            st.caption("Essayez de decocher l'option 'Exclure les films deja vus' dans les options avancees.")
 
 
 def tab_discover() -> None:
-    """Onglet Decouvrir (films similaires)."""
+    """Onglet Decouvrir (films similaires) avec UX amelioree."""
     st.markdown("### Explorer des Films Similaires")
-    st.markdown("Choisissez un film que vous aimez pour en decouvrir de similaires.")
+    st.info(
+        "Selectionnez un film que vous aimez, et nous trouverons "
+        "d'autres films avec des caracteristiques similaires."
+    )
     
-    items = api_items()
+    items = api_items_with_metadata()
     if not items:
-        st.warning("Catalogue indisponible.")
+        st.warning("Le catalogue de films n'est pas disponible.")
+        st.caption("Le service semble temporairement indisponible. Reessayez dans quelques instants.")
         return
     
-    col1, col2 = st.columns([3, 1])
+    # Create a mapping for display
+    item_options = {item["item_id"]: item["title"] for item in items}
+    
+    st.markdown("#### Selection")
+    
+    col1, col2 = st.columns([2, 1])
     
     with col1:
         item_id = st.selectbox(
-            "Film de reference",
-            items,
-            format_func=lambda x: f"Film {x}",
-            label_visibility="collapsed",
+            "Choisissez un film de reference",
+            options=list(item_options.keys()),
+            format_func=lambda x: item_options.get(x, f"Film #{x}"),
+            help="Selectionnez un film que vous appreciez pour trouver des films similaires",
             key="sim_item"
         )
     
     with col2:
         k = st.select_slider(
-            "Nombre",
+            "Nombre de resultats",
             options=[5, 10, 15, 20],
             value=10,
-            label_visibility="collapsed",
+            help="Nombre de films similaires a afficher",
             key="sim_k"
         )
     
     st.markdown("")
     
     if st.button("Trouver des films similaires", type="primary", use_container_width=True, key="sim_btn"):
-        with st.spinner("Recherche en cours..."):
+        progress_placeholder = st.empty()
+        progress_placeholder.info("Recherche de films similaires...")
+        
+        with st.spinner(""):
             data = api_similar(item_id, k)
+        
+        progress_placeholder.empty()
         
         if data and data.get("similar_items"):
             sims = data["similar_items"]
@@ -229,7 +291,7 @@ def tab_discover() -> None:
             
             df = pd.DataFrame([
                 {
-                    "Titre": s.get("title", f"Film {s['item_id']}"),
+                    "Titre": s.get("title", f"Film #{s['item_id']}"),
                     "Genre": s.get("genres", "-"),
                     "Similarite": s["similarity"],
                 }
@@ -249,40 +311,49 @@ def tab_discover() -> None:
                 },
             )
         else:
-            st.info("Aucun film similaire trouve.")
+            st.info("Aucun film similaire trouve pour cette selection.")
+            st.caption("Essayez de selectionner un autre film de reference.")
 
 
 def tab_history() -> None:
-    """Onglet Historique."""
+    """Onglet Historique avec UX amelioree."""
     st.markdown("### Votre Historique")
-    st.markdown("Consultez les films que vous avez notes.")
+    st.info(
+        "Consultez les films que vous avez deja notes. "
+        "Ces donnees alimentent nos recommandations."
+    )
     
     users = api_users()
     if not users:
-        st.warning("Profils indisponibles.")
+        st.warning("Les profils utilisateurs ne sont pas disponibles.")
         return
     
     user_id = st.selectbox(
-        "Profil",
+        "Selectionnez un profil",
         users,
-        format_func=lambda x: f"Utilisateur {x}",
-        label_visibility="collapsed",
+        format_func=lambda x: f"Utilisateur #{x}",
+        help="Choisissez le profil dont vous souhaitez voir l'historique",
         key="hist_user"
     )
     
     st.markdown("")
     
-    if st.button("Voir mon historique", type="primary", use_container_width=True, key="hist_btn"):
-        with st.spinner("Chargement..."):
+    if st.button("Voir l'historique", type="primary", use_container_width=True, key="hist_btn"):
+        progress_placeholder = st.empty()
+        progress_placeholder.info("Chargement de l'historique...")
+        
+        with st.spinner(""):
             data = api_history(user_id)
+        
+        progress_placeholder.empty()
         
         if data and data.get("history"):
             hist = data["history"]
-            st.success(f"{data['count']} films dans votre historique")
+            st.success(f"{data['count']} films dans l'historique")
             
             df = pd.DataFrame([
                 {
-                    "Titre": h.get("title", f"Film {h['item_id']}"),
+                    "Titre": h.get("title", f"Film #{h['item_id']}"),
                     "Note": h.get("rating", 0),
                 }
                 for h in hist
@@ -294,17 +365,19 @@ def tab_history() -> None:
                 hide_index=True,
                 column_config={
                     "Note": st.column_config.NumberColumn(
-                        format="%.1f / 5",
+                        format="%.1f / 5.0",
                     ),
                 },
             )
         else:
-            st.info("Historique vide.")
+            st.info("Aucun film note pour ce profil.")
+            st.caption("Cet utilisateur n'a pas encore evalue de films.")
 
 
 def tab_stats() -> None:
-    """Onglet Statistiques."""
+    """Onglet Statistiques avec UX amelioree."""
     st.markdown("### Statistiques du Systeme")
+    st.info("Vue d'ensemble du moteur de recommandation et de ses donnees.")
     
     health = api_health()
     
@@ -312,16 +385,50 @@ def tab_stats() -> None:
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            st.metric("Utilisateurs", health.get("n_users", "N/A"))
+            st.metric(
+                label="Utilisateurs",
+                value=health.get("n_users", "N/A"),
+                help="Nombre total de profils utilisateurs dans le systeme"
+            )
         
         with col2:
-            st.metric("Films", health.get("n_items", "N/A"))
+            st.metric(
+                label="Films",
+                value=health.get("n_items", "N/A"),
+                help="Nombre total de films disponibles dans le catalogue"
+            )
         
         with col3:
             status = "En ligne" if health.get("status") == "healthy" else "Degrade"
-            st.metric("Statut", status)
+            st.metric(
+                label="Statut API",
+                value=status,
+                help="Etat actuel du service de recommandation"
+            )
+        
+        st.markdown("---")
+        
+        with st.expander("A propos du systeme", expanded=False):
+            st.markdown("""
+            **Moteur de Recommandation**
+            
+            Ce systeme utilise des algorithmes de filtrage collaboratif pour generer 
+            des recommandations personnalisees. Il analyse les historiques de notation 
+            pour identifier des patterns et suggerer des films pertinents.
+            
+            | Caracteristique | Description |
+            |-----------------|-------------|
+            | **Algorithme** | Filtrage collaboratif (Matrix Factorization) |
+            | **Mise a jour** | Modele re-entraine periodiquement |
+            | **Latence** | Recommandations en temps reel (<1s) |
+            """)
     else:
-        st.error("Impossible de recuperer les statistiques.")
+        st.error("Impossible de recuperer les statistiques du systeme.")
+        st.caption("Le service API semble indisponible. Verifiez la connexion et reessayez.")
+        
+        if st.button("Reessayer", key="stats_retry"):
+            st.cache_data.clear()
+            st.rerun()
 
 
 # =============================================================================
@@ -332,19 +439,34 @@ def main() -> None:
     """Point d'entree."""
     load_css()
     
-    # Verification API
     health = api_health()
     if not health or health.get("status") != "healthy":
         st.error("Le service de recommandation n'est pas disponible.")
-        st.info(f"Verifiez que l'API est demarree sur {API_URL}")
+        
+        with st.expander("Que faire ?", expanded=True):
+            st.markdown(f"""
+            **Causes possibles :**
+            - Le serveur API n'est pas demarre
+            - Probleme de connexion reseau
+            - Le service est en cours de redemarrage
+            
+            **Actions suggerees :**
+            1. Verifiez que l'API est accessible sur `{API_URL}`
+            2. Attendez quelques instants et rechargez la page
+            3. Contactez l'administrateur si le probleme persiste
+            """)
+        
+        if st.button("Reessayer maintenant", type="primary"):
+            st.cache_data.clear()
+            st.rerun()
         return
     
-    # En-tete
     header()
+    welcome_section()
     
     st.markdown("---")
     
-    # Navigation par onglets
+    # Clean tab names without emojis
     tabs = st.tabs([
         "Recommandations",
         "Decouvrir",

@@ -1,32 +1,28 @@
-# Configuration Render pour le deploiement
-# Utilise pip avec wheels binaires pour eviter la compilation
+# Configuration Render - Deploiement Docker
+# Utilise Docker pour eviter les problemes de compilation pyarrow
 
 services:
   # API FastAPI
   - type: web
     name: mlops-recommender-api
-    env: python
+    runtime: docker
     plan: free
-    buildCommand: pip install --prefer-binary -r requirements.txt
-    startCommand: uvicorn src.serving.api:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
       - key: LOG_LEVEL
         value: INFO
       - key: LOG_FORMAT
         value: json
-      - key: PYTHONPATH
-        value: /opt/render/project/src
     healthCheckPath: /health
 
   # UI Streamlit
   - type: web
     name: mlops-recommender-ui
-    env: python
+    runtime: docker
     plan: free
-    buildCommand: pip install --prefer-binary -r requirements.txt
-    startCommand: streamlit run src/ui/app.py --server.port $PORT --server.address 0.0.0.0
+    dockerfilePath: ./Dockerfile.ui
+    dockerContext: .
     envVars:
       - key: API_URL
         value: https://mlops-recommender-api.onrender.com
-      - key: PYTHONPATH
-        value: /opt/render/project/src

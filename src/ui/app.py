@@ -466,24 +466,81 @@ def main() -> None:
     
     st.markdown("---")
     
-    # Clean tab names without emojis
-    tabs = st.tabs([
-        "Recommandations",
-        "Decouvrir",
-        "Historique",
-        "Statistiques"
-    ])
+    # Initialize tab state
+    if "current_tab" not in st.session_state:
+        st.session_state.current_tab = 0
     
-    with tabs[0]:
+    # Tab names
+    tab_names = ["Recommandations", "Decouvrir", "Historique", "Statistiques"]
+    
+    # Custom CSS for tab-like buttons matching original design
+    st.markdown("""
+    <style>
+    /* Container for tab buttons - white box with border */
+    div.tab-container {
+        background: white;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        padding: 8px 12px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* All tab buttons base style */
+    div[data-testid="stHorizontalBlock"] button {
+        border-radius: 8px !important;
+        font-weight: 500 !important;
+        padding: 12px 20px !important;
+    }
+    
+    /* Secondary (inactive) tab buttons */
+    div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
+        background: transparent !important;
+        color: #1E293B !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+    
+    div[data-testid="stHorizontalBlock"] button[kind="secondary"]:hover {
+        background: #F1F5F9 !important;
+    }
+    
+    /* Primary (active) tab button - indigo with orange underline */
+    div[data-testid="stHorizontalBlock"] button[kind="primary"] {
+        background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3) !important;
+        border-bottom: 3px solid #F97316 !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Container for tabs
+    with st.container():
+        st.markdown('<div class="tab-container">', unsafe_allow_html=True)
+        cols = st.columns(4)
+        for i, (col, name) in enumerate(zip(cols, tab_names)):
+            with col:
+                if st.button(
+                    name,
+                    key=f"tab_btn_{i}",
+                    type="primary" if st.session_state.current_tab == i else "secondary",
+                    use_container_width=True
+                ):
+                    st.session_state.current_tab = i
+                    st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    st.markdown("")
+    
+    # Display active tab content
+    if st.session_state.current_tab == 0:
         tab_recommendations()
-    
-    with tabs[1]:
+    elif st.session_state.current_tab == 1:
         tab_discover()
-    
-    with tabs[2]:
+    elif st.session_state.current_tab == 2:
         tab_history()
-    
-    with tabs[3]:
+    elif st.session_state.current_tab == 3:
         tab_stats()
 
 

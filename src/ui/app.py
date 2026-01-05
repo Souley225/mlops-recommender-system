@@ -626,8 +626,8 @@ def main() -> None:
                 </div>
             </div>
             <div class="social-links">
-                <a href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/Souley225" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/souleymanes-sall/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
                 <a href="mailto:contact@example.com" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
             <p class="footer-license"><i class="fas fa-balance-scale"></i> MIT License - 2026</p>

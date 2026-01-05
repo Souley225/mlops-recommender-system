@@ -30,7 +30,12 @@ CURRENT_DIR = Path(__file__).parent
 
 
 def load_css() -> None:
-    """Charge les styles CSS."""
+    """Charge les styles CSS et FontAwesome."""
+    # FontAwesome 6.4.0 CDN
+    st.markdown('''
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    ''', unsafe_allow_html=True)
+    
     css_path = CURRENT_DIR / "style.css"
     if css_path.exists():
         st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
@@ -120,19 +125,36 @@ def api_history(user_id: int) -> Optional[Dict]:
 # =============================================================================
 
 def header() -> None:
-    """Affiche l'en-tete de l'application avec statut API."""
-    col1, col2 = st.columns([3, 1])
+    """Affiche l'en-tete avec gradient card et tech badges."""
+    health = api_health()
+    n_films = health.get("n_items", 0) if health else 0
+    n_users = health.get("n_users", 0) if health else 0
+    is_online = health and health.get("status") == "healthy"
     
-    with col1:
-        st.title("Recommandation de Films")
-        st.caption("Decouvrez vos prochains films preferes grace a l'intelligence artificielle")
+    # Main gradient header card with FontAwesome icons
+    st.markdown(f'''
+    <div class="main-header">
+        <h1 class="main-title"><i class="fas fa-film"></i> Systeme de Recommandation de Films</h1>
+        <p class="main-subtitle">Decouvrez vos prochains films preferes grace a l'intelligence artificielle</p>
+        <div class="tech-badges">
+            <span class="tech-badge"><i class="fas fa-brain"></i> Machine Learning</span>
+            <span class="tech-badge"><i class="fas fa-users"></i> Filtrage Collaboratif</span>
+            <span class="tech-badge"><i class="fas fa-bolt"></i> Temps Reel</span>
+            <span class="tech-badge"><i class="fas fa-database"></i> {n_films:,} Films</span>
+            <span class="tech-badge"><i class="fas fa-user-friends"></i> {n_users:,} Utilisateurs</span>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    with col2:
-        health = api_health()
-        if health and health.get("status") == "healthy":
-            st.success(f"● En ligne · {health.get('n_items', 0)} films")
-        else:
-            st.error("○ Service indisponible")
+    # Status indicator
+    if is_online:
+        st.markdown('''
+        <div class="status-online"><i class="fas fa-check-circle"></i> Systeme operationnel</div>
+        ''', unsafe_allow_html=True)
+    else:
+        st.markdown('''
+        <div class="status-offline"><i class="fas fa-exclamation-circle"></i> Service indisponible</div>
+        ''', unsafe_allow_html=True)
 
 
 def welcome_section() -> None:
@@ -155,11 +177,21 @@ def welcome_section() -> None:
 
 def tab_recommendations() -> None:
     """Onglet Recommandations avec UX amelioree."""
-    st.markdown("### Recommandations Personnalisees")
-    st.info(
-        "Notre algorithme analyse les preferences de votre profil "
-        "pour vous suggerer des films que vous allez adorer."
-    )
+    st.markdown('''
+    <div class="section-header">
+        <i class="fas fa-star"></i>
+        <h3>Recommandations Personnalisees</h3>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    st.markdown('''
+    <div class="info-card">
+        <i class="fas fa-lightbulb"></i>
+        <div class="content">
+            <p>Notre algorithme analyse les preferences de votre profil pour vous suggerer des films que vous allez adorer.</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     users = api_users()
     if not users:
@@ -237,11 +269,21 @@ def tab_recommendations() -> None:
 
 def tab_discover() -> None:
     """Onglet Decouvrir (films similaires) avec UX amelioree."""
-    st.markdown("### Explorer des Films Similaires")
-    st.info(
-        "Selectionnez un film que vous aimez, et nous trouverons "
-        "d'autres films avec des caracteristiques similaires."
-    )
+    st.markdown('''
+    <div class="section-header">
+        <i class="fas fa-compass"></i>
+        <h3>Explorer des Films Similaires</h3>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    st.markdown('''
+    <div class="info-card">
+        <i class="fas fa-bullseye"></i>
+        <div class="content">
+            <p>Selectionnez un film que vous aimez, et nous trouverons d'autres films avec des caracteristiques similaires.</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     items = api_items_with_metadata()
     if not items:
@@ -317,11 +359,21 @@ def tab_discover() -> None:
 
 def tab_history() -> None:
     """Onglet Historique avec UX amelioree."""
-    st.markdown("### Votre Historique")
-    st.info(
-        "Consultez les films que vous avez deja notes. "
-        "Ces donnees alimentent nos recommandations."
-    )
+    st.markdown('''
+    <div class="section-header">
+        <i class="fas fa-history"></i>
+        <h3>Votre Historique</h3>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    st.markdown('''
+    <div class="info-card">
+        <i class="fas fa-folder-open"></i>
+        <div class="content">
+            <p>Consultez les films que vous avez deja notes. Ces donnees alimentent nos recommandations.</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     users = api_users()
     if not users:
@@ -376,8 +428,21 @@ def tab_history() -> None:
 
 def tab_stats() -> None:
     """Onglet Statistiques avec UX amelioree."""
-    st.markdown("### Statistiques du Systeme")
-    st.info("Vue d'ensemble du moteur de recommandation et de ses donnees.")
+    st.markdown('''
+    <div class="section-header">
+        <i class="fas fa-chart-line"></i>
+        <h3>Statistiques du Systeme</h3>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    st.markdown('''
+    <div class="info-card">
+        <i class="fas fa-cogs"></i>
+        <div class="content">
+            <p>Vue d'ensemble du moteur de recommandation et de ses donnees.</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
     
     health = api_health()
     
@@ -542,6 +607,33 @@ def main() -> None:
         tab_history()
     elif st.session_state.current_tab == 3:
         tab_stats()
+    
+    # Footer with project credits
+    st.markdown('''
+    <div class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h4><i class="fas fa-film"></i> Systeme de Recommandation de Films</h4>
+                <p>Moteur de recommandation intelligent propulse par le Machine Learning</p>
+            </div>
+            <div class="footer-tech">
+                <p class="footer-label"><i class="fas fa-code"></i> Stack Technique</p>
+                <div class="footer-badges">
+                    <span class="footer-badge"><i class="fab fa-python"></i> Python</span>
+                    <span class="footer-badge"><i class="fas fa-bolt"></i> FastAPI</span>
+                    <span class="footer-badge"><i class="fas fa-chart-bar"></i> Streamlit</span>
+                    <span class="footer-badge"><i class="fas fa-brain"></i> Scikit-learn</span>
+                </div>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:contact@example.com" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+            <p class="footer-license"><i class="fas fa-balance-scale"></i> MIT License - 2026</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
 
 
 if __name__ == "__main__":

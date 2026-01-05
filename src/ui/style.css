@@ -253,16 +253,86 @@ small,
 }
 
 /* =============================================================================
-   Sidebar
+   Sidebar Navigation
    ============================================================================= */
 section[data-testid="stSidebar"] {
-    background: var(--card) !important;
+    background: linear-gradient(180deg, var(--card) 0%, var(--bg-secondary) 100%) !important;
     border-right: 1px solid var(--border);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-md);
 }
 
 section[data-testid="stSidebar"]>div {
-    padding-top: 2rem;
+    padding-top: 1.5rem;
+}
+
+/* Sidebar Brand */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-brand i {
+    font-size: 1.75rem;
+    color: #a78bfa;
+}
+
+.sidebar-brand span {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+
+/* Navigation Title */
+.sidebar-nav-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94a3b8 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 0.75rem 0 !important;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sidebar-nav-title i {
+    font-size: 0.85rem;
+}
+
+/* Sidebar Navigation Buttons */
+section[data-testid="stSidebar"] .stButton>button {
+    background: transparent !important;
+    color: #e2e8f0 !important;
+    border: none !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.75rem 1rem !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    box-shadow: none !important;
+    transition: var(--transition) !important;
+    margin-bottom: 0.25rem !important;
+}
+
+section[data-testid="stSidebar"] .stButton>button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    transform: translateX(4px);
+}
+
+section[data-testid="stSidebar"] .stButton>button[kind="primary"] {
+    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%) !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3) !important;
+}
+
+section[data-testid="stSidebar"] .stButton>button[kind="primary"]:hover {
+    transform: translateX(0);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
 }
 
 /* =============================================================================
@@ -830,8 +900,8 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
    Sidebar Info Cards
    ============================================================================= */
 .sidebar-info {
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius);
     padding: 1rem;
     margin-bottom: 1rem;
@@ -840,7 +910,7 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 .sidebar-info .title {
     font-weight: 600;
     font-size: 0.9rem;
-    color: var(--text-primary);
+    color: #f1f5f9;
     margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -848,19 +918,122 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 }
 
 .sidebar-info .title i {
-    color: var(--primary);
+    color: #a78bfa;
 }
 
 .sidebar-info .value {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary);
+    color: #a78bfa;
 }
 
 .sidebar-info p {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: #94a3b8;
+    margin: 0 0 0.75rem 0;
+}
+
+/* Feature List in Sidebar */
+.feature-list {
+    list-style: none;
+    padding: 0;
     margin: 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    padding: 0.25rem 0;
+}
+
+.feature-list li i {
+    color: var(--success);
+    font-size: 0.7rem;
+}
+
+/* Sidebar Status Indicators */
+.sidebar-status {
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-status.success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    border-left: 3px solid var(--success);
+}
+
+.sidebar-status.error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-left: 3px solid var(--danger);
+}
+
+.status-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.sidebar-status.success .status-header {
+    color: var(--success-end);
+}
+
+.sidebar-status.error .status-header {
+    color: var(--danger-end);
+}
+
+.status-details {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    padding: 0.15rem 0;
+}
+
+.status-item i {
+    width: 14px;
+    color: var(--text-muted);
+}
+
+/* Sidebar Links */
+.sidebar-links {
+    padding: 0;
+}
+
+.sidebar-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: #94a3b8 !important;
+    text-decoration: none;
+    font-size: 0.85rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    margin-bottom: 0.25rem;
+}
+
+.sidebar-links a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #a78bfa !important;
+    transform: translateX(4px);
+}
+
+.sidebar-links a i {
+    width: 16px;
+    color: #64748b;
 }
 
 /* =============================================================================
@@ -1013,6 +1186,31 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
     color: var(--primary);
     background: rgba(102, 126, 234, 0.1);
     transform: translateY(-3px);
+}
+
+.source-code-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+    color: white !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin: 1rem 0;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.source-code-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.source-code-link i {
+    font-size: 0.9rem;
 }
 
 .footer-license {

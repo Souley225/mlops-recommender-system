@@ -20,9 +20,9 @@ import streamlit as st
 
 st.set_page_config(
     page_title="Recommandation Films",
-    page_icon="▶",
+    page_icon="🎬",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 API_URL = os.getenv("API_URL", "http://localhost:8000")
@@ -533,79 +533,118 @@ def main() -> None:
     
     # Initialize tab state
     if "current_tab" not in st.session_state:
-        st.session_state.current_tab = 0
+        st.session_state.current_tab = "Recommandations"
     
-    # Tab names
-    tab_names = ["Recommandations", "Decouvrir", "Historique", "Statistiques"]
-    
-    # Custom CSS for tab-like buttons matching original design
-    st.markdown("""
-    <style>
-    /* Container for tab buttons - white box with border */
-    div.tab-container {
-        background: white;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        padding: 8px 12px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* All tab buttons base style */
-    div[data-testid="stHorizontalBlock"] button {
-        border-radius: 8px !important;
-        font-weight: 500 !important;
-        padding: 12px 20px !important;
-    }
-    
-    /* Secondary (inactive) tab buttons */
-    div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
-        background: transparent !important;
-        color: #1E293B !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-    
-    div[data-testid="stHorizontalBlock"] button[kind="secondary"]:hover {
-        background: #F1F5F9 !important;
-    }
-    
-    /* Primary (active) tab button - indigo with orange underline */
-    div[data-testid="stHorizontalBlock"] button[kind="primary"] {
-        background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3) !important;
-        border-bottom: 3px solid #F97316 !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    # Container for tabs
-    with st.container():
-        st.markdown('<div class="tab-container">', unsafe_allow_html=True)
-        cols = st.columns(4)
-        for i, (col, name) in enumerate(zip(cols, tab_names)):
-            with col:
-                if st.button(
-                    name,
-                    key=f"tab_btn_{i}",
-                    type="primary" if st.session_state.current_tab == i else "secondary",
-                    use_container_width=True
-                ):
-                    st.session_state.current_tab = i
-                    st.rerun()
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    st.markdown("")
+    # Sidebar navigation
+    with st.sidebar:
+        st.markdown('''
+        <div class="sidebar-brand">
+            <i class="fas fa-film"></i>
+            <span>Recommandation Films</span>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Navigation menu
+        st.markdown('<p class="sidebar-nav-title"><i class="fas fa-bars"></i> Navigation</p>', unsafe_allow_html=True)
+        
+        menu_items = {
+            "Recommandations": "fa-star",
+            "Decouvrir": "fa-compass", 
+            "Historique": "fa-history",
+            "Statistiques": "fa-chart-line"
+        }
+        
+        for item, icon in menu_items.items():
+            is_active = st.session_state.current_tab == item
+            btn_type = "primary" if is_active else "secondary"
+            if st.button(
+                f"  {item}",
+                key=f"nav_{item}",
+                type=btn_type,
+                use_container_width=True
+            ):
+                st.session_state.current_tab = item
+                st.rerun()
+        
+        st.markdown("---")
+        
+        # About/Info Card
+        st.markdown('''
+        <div class="sidebar-info">
+            <div class="title"><i class="fas fa-info-circle"></i> A propos</div>
+            <p>Systeme de recommandation de films intelligent base sur l'IA.</p>
+            <ul class="feature-list">
+                <li><i class="fas fa-check"></i> Filtrage collaboratif</li>
+                <li><i class="fas fa-check"></i> Recommandations personnalisees</li>
+                <li><i class="fas fa-check"></i> Films similaires</li>
+                <li><i class="fas fa-check"></i> API temps reel</li>
+            </ul>
+        </div>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Status Indicators
+        health = api_health()
+        if health and health.get("status") == "healthy":
+            n_users = health.get("n_users", 0)
+            n_items = health.get("n_items", 0)
+            st.markdown(f'''
+            <div class="sidebar-status success">
+                <div class="status-header">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Systeme Operationnel</span>
+                </div>
+                <div class="status-details">
+                    <div class="status-item">
+                        <i class="fas fa-database"></i>
+                        <span>{n_items:,} films</span>
+                    </div>
+                    <div class="status-item">
+                        <i class="fas fa-users"></i>
+                        <span>{n_users:,} utilisateurs</span>
+                    </div>
+                </div>
+            </div>
+            ''', unsafe_allow_html=True)
+        else:
+            st.markdown('''
+            <div class="sidebar-status error">
+                <div class="status-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Service Indisponible</span>
+                </div>
+            </div>
+            ''', unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Footer Links
+        st.markdown('''
+        <div class="sidebar-links">
+            <p class="sidebar-nav-title"><i class="fas fa-external-link-alt"></i> Liens</p>
+            <a href="https://github.com/Souley225/mlops-recommender-system" target="_blank">
+                <i class="fab fa-github"></i> Code Source
+            </a>
+            <a href="https://github.com/Souley225" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/souleymanes-sall/" target="_blank">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+        </div>
+        ''', unsafe_allow_html=True)
     
     # Display active tab content
-    if st.session_state.current_tab == 0:
+    if st.session_state.current_tab == "Recommandations":
         tab_recommendations()
-    elif st.session_state.current_tab == 1:
+    elif st.session_state.current_tab == "Decouvrir":
         tab_discover()
-    elif st.session_state.current_tab == 2:
+    elif st.session_state.current_tab == "Historique":
         tab_history()
-    elif st.session_state.current_tab == 3:
+    elif st.session_state.current_tab == "Statistiques":
         tab_stats()
     
     # Footer with project credits
@@ -628,8 +667,11 @@ def main() -> None:
             <div class="social-links">
                 <a href="https://github.com/Souley225" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/souleymanes-sall/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="mailto:contact@example.com" title="Email"><i class="fas fa-envelope"></i></a>
+                <a href="mailto:sallsouleymane2207@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
+            <a href="https://github.com/Souley225/mlops-recommender-system" target="_blank" class="source-code-link">
+                <i class="fas fa-code-branch"></i> Code Source
+            </a>
             <p class="footer-license"><i class="fas fa-balance-scale"></i> MIT License - 2026</p>
         </div>
     </div>

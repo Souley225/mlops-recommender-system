@@ -1228,64 +1228,264 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 }
 
 /* =============================================================================
-   Responsive
+   MOBILE-FIRST RESPONSIVE DESIGN
+   Optimized for 90% phone usage with ergonomic touch targets
    ============================================================================= */
+
+/* --- Tablet and below (768px) --- */
 @media (max-width: 768px) {
 
-    h1,
-    .main-title {
-        font-size: 1.5rem !important;
+    /* Base mobile adjustments */
+    .stApp {
+        padding: 0 !important;
     }
 
+    /* Main content area - reduce padding to maximize space */
+    .main .block-container {
+        padding: 0.75rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Typography for mobile */
+    h1,
+    .main-title {
+        font-size: 1.4rem !important;
+        line-height: 1.3 !important;
+    }
+
+    h2,
+    h3 {
+        font-size: 1.15rem !important;
+    }
+
+    p,
+    .stMarkdown p {
+        font-size: 0.95rem !important;
+    }
+
+    /* Main header - compact but visible */
     .main-header-card,
     .main-header {
-        padding: 1.25rem;
+        padding: 1rem 0.875rem;
+        margin-bottom: 1rem;
+        border-radius: 12px;
     }
 
     .main-subtitle {
-        font-size: 0.95rem;
+        font-size: 0.875rem;
+        line-height: 1.4;
     }
 
-    /* Sidebar collapse */
-    section[data-testid="stSidebar"] {
-        width: 100% !important;
-    }
-
-    /* Tab navigation stacks */
-    .stTabs [data-baseweb="tab-list"] {
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-        width: 100%;
-    }
-
-    /* Buttons full width */
-    .stButton>button {
-        padding: 12px 20px !important;
-        font-size: 0.9rem !important;
-        width: 100%;
-    }
-
-    /* Tech badges wrap and shrink */
+    /* Tech badges - horizontal scroll on mobile */
     .tech-badges {
-        gap: 0.35rem;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.4rem;
+        padding-bottom: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .tech-badges::-webkit-scrollbar {
+        display: none;
     }
 
     .tech-badge {
-        padding: 0.25rem 0.5rem;
+        padding: 0.3rem 0.6rem;
         font-size: 0.7rem;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
-    /* Cards stack vertically */
+    /* --- SIDEBAR MOBILE OPTIMIZATION --- */
+    section[data-testid="stSidebar"] {
+        width: 85% !important;
+        max-width: 320px !important;
+        z-index: 1000;
+    }
+
+    section[data-testid="stSidebar"]>div {
+        padding: 1rem 0.75rem !important;
+    }
+
+    /* Larger touch targets for sidebar nav buttons */
+    section[data-testid="stSidebar"] .stButton>button {
+        padding: 1rem 0.875rem !important;
+        font-size: 1rem !important;
+        min-height: 52px !important;
+        margin-bottom: 0.5rem !important;
+        border-radius: 10px !important;
+    }
+
+    .sidebar-brand i {
+        font-size: 1.5rem;
+    }
+
+    .sidebar-brand span {
+        font-size: 1rem;
+    }
+
+    /* --- MAIN ACTION BUTTONS - LARGE TOUCH TARGETS --- */
+    .stButton>button {
+        padding: 1rem 1.5rem !important;
+        font-size: 1rem !important;
+        min-height: 56px !important;
+        width: 100% !important;
+        border-radius: 14px !important;
+        font-weight: 600 !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    /* Primary CTA buttons even larger */
+    .stButton>button[kind="primary"] {
+        min-height: 60px !important;
+        font-size: 1.05rem !important;
+    }
+
+    /* --- FORM CONTROLS - EASY TO TAP --- */
+    /* Selectbox larger */
+    .stSelectbox>div>div {
+        min-height: 52px !important;
+        font-size: 1rem !important;
+    }
+
+    .stSelectbox>div>div>div {
+        padding: 0.75rem 1rem !important;
+    }
+
+    /* Selectbox label */
+    .stSelectbox label {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Dropdown options - large touch targets */
+    li[role="option"],
+    div[data-baseweb="menu"] li {
+        min-height: 48px !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.95rem !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    /* Slider - larger touch area */
+    .stSlider>div {
+        padding: 0.5rem 0 !important;
+    }
+
+    .stSlider>div>div>div>div {
+        height: 8px !important;
+    }
+
+    .stSlider>div>div>div>div>div {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    /* Checkbox - larger touch target */
+    .stCheckbox {
+        padding: 0.75rem 0 !important;
+    }
+
+    .stCheckbox>label {
+        font-size: 0.95rem !important;
+        min-height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .stCheckbox span[data-testid="stCheckbox"] {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    /* --- CONTENT LAYOUT --- */
+    /* Stack columns vertically */
     div[data-testid="stHorizontalBlock"] {
         flex-direction: column !important;
+        gap: 0.75rem !important;
     }
 
-    /* Results display */
+    /* Column items full width */
+    div[data-testid="stHorizontalBlock"]>div {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    /* --- SECTION HEADERS --- */
+    .section-header {
+        margin-top: 1.25rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .section-header i {
+        font-size: 1.1rem;
+    }
+
+    .section-header h3 {
+        font-size: 1.1rem !important;
+    }
+
+    /* --- INFO CARDS --- */
+    .info-card {
+        padding: 0.875rem 1rem;
+        margin-bottom: 0.875rem;
+    }
+
+    .info-card i {
+        font-size: 1rem;
+    }
+
+    .info-card p {
+        font-size: 0.9rem !important;
+        line-height: 1.5;
+    }
+
+    /* --- STATUS INDICATORS --- */
+    .status-online,
+    .status-offline {
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8rem;
+    }
+
+    /* --- EXPANDERS --- */
+    .streamlit-expanderHeader {
+        padding: 0.875rem 1rem !important;
+        font-size: 0.95rem !important;
+        min-height: 48px !important;
+    }
+
+    .streamlit-expanderContent {
+        padding: 0.875rem !important;
+    }
+
+    /* --- DATA TABLES --- */
+    .stDataFrame {
+        font-size: 0.85rem !important;
+    }
+
+    .stDataFrame [data-testid="stTable"] {
+        overflow-x: auto !important;
+    }
+
+    /* --- METRICS --- */
+    div[data-testid="stMetric"] {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    div[data-testid="stMetricValue"] {
+        font-size: 1.5rem !important;
+    }
+
+    div[data-testid="stMetricLabel"] {
+        font-size: 0.8rem !important;
+    }
+
+    /* --- RESULT CARDS --- */
     .proba-value {
         font-size: 2rem;
     }
@@ -1294,67 +1494,272 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
     .result-card-medium,
     .result-card-high {
         padding: 1rem;
+        border-radius: 0 12px 12px 0;
     }
 
-    /* Section headers */
-    .section-header {
-        margin-top: 1rem;
+    /* --- RECOMMENDATIONS DISPLAY --- */
+    .recommendation {
+        padding: 0.875rem 1rem;
     }
 
-    .section-header h3 {
-        font-size: 1.1rem !important;
+    /* --- ALERTS --- */
+    .stAlert {
+        padding: 0.875rem 1rem !important;
+        font-size: 0.9rem !important;
     }
 
-    /* Info cards */
-    .info-card {
-        padding: 0.75rem 1rem;
-    }
-
-    .info-card p {
-        font-size: 0.9rem;
-    }
-
-    /* Footer responsive */
+    /* --- FOOTER --- */
     .footer {
-        padding: 1.5rem 1rem;
+        padding: 1.25rem 1rem;
+        margin-top: 2rem;
     }
 
     .footer-brand h4 {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-brand p {
+        font-size: 0.8rem;
     }
 
     .footer-badges {
-        gap: 0.4rem;
+        gap: 0.35rem;
     }
 
     .footer-badge {
-        padding: 0.25rem 0.6rem;
-        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
     }
 
     .footer .social-links {
-        gap: 1rem;
+        gap: 0.75rem;
+        margin: 1rem 0;
     }
 
     .footer .social-links a {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+        padding: 0.75rem;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .source-code-link {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+        min-height: 48px;
+    }
+
+    .footer-license {
+        font-size: 0.7rem !important;
+    }
+
+    /* --- SIDEBAR INFO --- */
+    .sidebar-info {
+        padding: 0.875rem;
+    }
+
+    .sidebar-info .title {
+        font-size: 0.85rem;
+    }
+
+    .sidebar-info p {
+        font-size: 0.8rem;
+    }
+
+    .feature-list li {
+        font-size: 0.75rem;
+        padding: 0.35rem 0;
+    }
+
+    .sidebar-status {
+        padding: 0.875rem;
+    }
+
+    .sidebar-links a {
+        padding: 0.75rem;
+        min-height: 48px;
+        font-size: 0.9rem;
     }
 }
 
-/* Extra small screens */
-@media (max-width: 480px) {
+/* --- PHONE SCREENS (576px and below) --- */
+@media (max-width: 576px) {
+
+    /* Even more compact for phones */
+    .main .block-container {
+        padding: 0.5rem !important;
+    }
 
     h1,
     .main-title {
         font-size: 1.25rem !important;
     }
 
+    .main-header-card,
+    .main-header {
+        padding: 0.875rem 0.75rem;
+    }
+
+    .main-subtitle {
+        font-size: 0.8rem;
+    }
+
+    /* Tech badges smaller on phones */
     .tech-badge {
+        padding: 0.25rem 0.5rem;
         font-size: 0.65rem;
+    }
+
+    /* Section headers */
+    .section-header h3 {
+        font-size: 1rem !important;
+    }
+
+    /* Info cards more compact */
+    .info-card {
+        padding: 0.75rem 0.875rem;
+    }
+
+    .info-card p {
+        font-size: 0.85rem !important;
+    }
+
+    /* Buttons still large for touch */
+    .stButton>button {
+        min-height: 54px !important;
+        font-size: 0.95rem !important;
+        padding: 0.875rem 1rem !important;
+    }
+
+    /* Metrics compact */
+    div[data-testid="stMetricValue"] {
+        font-size: 1.35rem !important;
+    }
+
+    /* Footer compact */
+    .footer-brand h4 {
+        font-size: 0.95rem;
+    }
+}
+
+/* --- EXTRA SMALL PHONES (400px and below) --- */
+@media (max-width: 400px) {
+
+    h1,
+    .main-title {
+        font-size: 1.15rem !important;
+    }
+
+    .main-header-card,
+    .main-header {
+        padding: 0.75rem 0.625rem;
+    }
+
+    .main-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .tech-badges {
+        gap: 0.3rem;
+    }
+
+    .tech-badge {
         padding: 0.2rem 0.4rem;
+        font-size: 0.6rem;
     }
 
     .section-header h3 {
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Still maintain minimum touch targets */
+    .stButton>button {
+        min-height: 52px !important;
+    }
+
+    li[role="option"] {
+        min-height: 44px !important;
+    }
+}
+
+/* --- LANDSCAPE MODE ON PHONES --- */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    .main-header-card,
+    .main-header {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .main-title {
+        font-size: 1.1rem !important;
+    }
+
+    .main-subtitle {
+        display: none;
+    }
+
+    .tech-badges {
+        display: none;
+    }
+
+    .section-header {
+        margin-top: 0.5rem;
+    }
+
+    /* Reduce vertical spacing */
+    .stButton>button {
+        min-height: 48px !important;
+        margin: 0.25rem 0 !important;
+    }
+
+    .footer {
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+}
+
+/* --- TOUCH DEVICE OPTIMIZATIONS --- */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Remove hover effects that don't work well on touch */
+    .stButton>button:hover {
+        transform: none !important;
+    }
+
+    div[data-testid="stMetric"]:hover {
+        transform: none !important;
+    }
+
+    /* Ensure minimum touch target sizes (48px per WCAG) */
+    button,
+    a,
+    input[type="checkbox"],
+    .stSelectbox>div>div {
+        min-height: 48px;
+    }
+
+    /* Native scroll behavior */
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Prevent text selection on buttons */
+    button {
+        user-select: none;
+        -webkit-user-select: none;
+    }
+}
+
+/* --- SAFE AREA INSETS (for notched phones) --- */
+@supports (padding: max(0px)) {
+    .main .block-container {
+        padding-left: max(0.75rem, env(safe-area-inset-left)) !important;
+        padding-right: max(0.75rem, env(safe-area-inset-right)) !important;
+    }
+
+    .footer {
+        padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
     }
 }

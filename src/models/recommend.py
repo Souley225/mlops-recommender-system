@@ -53,6 +53,7 @@ class Recommender:
         self.item_popularity: Optional[pd.DataFrame] = None
         self.movies_df: Optional[pd.DataFrame] = None
         self.metadata: Optional[Dict[str, Any]] = None
+        self.item_features: Optional[np.ndarray] = None  # Genre-based features for similarity
 
         self._loaded = False
 
@@ -90,6 +91,8 @@ class Recommender:
         movies_path = self.data_path.parent / "interim" / "movies.csv"
         if movies_path.exists():
             self.movies_df = load_csv(movies_path)
+            # Construire la matrice de features genre pour la similarite
+            self._build_genre_features()
 
         self._loaded = True
 
@@ -100,6 +103,52 @@ class Recommender:
         )
 
         return self
+
+    def _build_genre_features(self) -> None:
+        """
+        Construit une matrice de features basee sur les genres.
+        
+        Chaque film est represente par un vecteur binaire one-hot
+        encodant ses genres. Utilise pour la similarite content-based.
+        """
+        if self.movies_df is None or self.item_encoder is None:
+            return
+        
+        # Obtenir tous les genres uniques
+        all_genres = set()
+        for genres_str in self.movies_df["genres"].dropna():
+            if genres_str and genres_str != "(no genres listed)":
+                for genre in genres_str.split("|"):
+                    all_genres.add(genre.strip())
+        
+        genre_list = sorted(list(all_genres))
+        genre_to_idx = {g: i for i, g in enumerate(genre_list)}
+        
+        n_items = len(self.item_encoder.classes_)
+        n_genres = len(genre_list)
+        
+        if n_genres == 0:
+            logger.warning("Aucun genre trouve dans les donnees")
+            return
+        
+        # Creer la matrice de features
+        self.item_features = np.zeros((n_items, n_genres), dtype=np.float32)
+        
+        for item_idx, item_id in enumerate(self.item_encoder.classes_):
+            movie = self.movies_df[self.movies_df["item_id"] == item_id]
+            if not movie.empty:
+                genres_str = movie.iloc[0].get("genres", "")
+                if genres_str and genres_str != "(no genres listed)":
+                    for genre in genres_str.split("|"):
+                        genre = genre.strip()
+                        if genre in genre_to_idx:
+                            self.item_features[item_idx, genre_to_idx[genre]] = 1.0
+        
+        logger.debug(
+            "Matrice de features genre construite",
+            n_items=n_items,
+            n_genres=n_genres,
+        )
 
     def _ensure_loaded(self) -> None:
         """Verifie que le recommandeur est charge."""
@@ -313,7 +362,20 @@ class Recommender:
             return []
 
         # Calculer les similarites
-        similar_indices, scores = self.model.similar_items(item_idx, n=n)
+        # Pour PopularityModel, passer les features genre pour le calcul de similarite
+        if hasattr(self.model, "similar_items"):
+            # Verifier si le modele accepte item_features (PopularityModel)
+            import inspect
+            sig = inspect.signature(self.model.similar_items)
+            if "item_features" in sig.parameters:
+                similar_indices, scores = self.model.similar_items(
+                    item_idx, n=n, item_features=self.item_features
+                )
+            else:
+                similar_indices, scores = self.model.similar_items(item_idx, n=n)
+        else:
+            logger.warning("Le modele ne supporte pas la similarite d'items")
+            return []
 
         # Formater les resultats
         similar = []

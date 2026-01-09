@@ -1,60 +1,103 @@
 /* =============================================================================
-   Police moderne
+   ELITE DESIGN SYSTEM - Film Recommendation Application
+   A premium, cinematic palette with intentional hierarchy
    ============================================================================= */
+
+/* Modern Typography */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* =============================================================================
-   Variables Design System - Updated Palette
+   Design Tokens - Cinematic Premium Palette
    ============================================================================= */
 :root {
-    /* Primary Gradient Colors */
-    --primary-start: #667eea;
-    --primary-end: #764ba2;
-    --primary: #667eea;
-    --primary-light: #818cf8;
-    --primary-dark: #764ba2;
+    /* Primary - Amber Gold (Cinematic warmth) */
+    --primary: #D4A574;
+    --primary-dark: #B8956A;
+    --primary-light: #F0E6D8;
+    --primary-hover: #C49968;
 
-    /* Semantic Colors */
-    --success-start: #10b981;
-    --success-end: #059669;
-    --success: #10b981;
+    /* Secondary - Midnight Blue (Intelligent structure) */
+    --secondary: #2D3A4A;
+    --secondary-light: #3D4D5F;
+    --secondary-dark: #1E2A38;
 
-    --warning-start: #f59e0b;
-    --warning-end: #d97706;
-    --warning: #f59e0b;
+    /* Accent - Electric Coral (Emphasis) */
+    --accent: #E07B5D;
+    --accent-light: #F5A68C;
 
-    --danger-start: #ef4444;
-    --danger-end: #dc2626;
-    --danger: #ef4444;
+    /* Neutrals - Ink Spectrum (Warm grays) */
+    --ink-900: #1A1A1F;
+    --ink-800: #2A2A32;
+    --ink-700: #3D3D47;
+    --ink-600: #52525E;
+    --ink-500: #6B6B79;
+    --ink-400: #8C8C98;
+    --ink-300: #A8A8B3;
+    --ink-200: #CDCDD4;
+    --ink-100: #E8E8EC;
+    --ink-50: #F5F5F7;
+    --white: #FFFFFF;
 
-    /* Text Colors */
-    --text-primary: #1f2937;
-    --text-secondary: #4b5563;
-    --text-muted: #9ca3af;
-    --text: #1f2937;
-    --text-light: #4b5563;
+    /* Functional Colors (Semantic) */
+    --success: #2E7D5A;
+    --success-light: #D4EDDF;
+    --success-dark: #1E5A3F;
 
-    /* Backgrounds */
-    --bg: #f8fafc;
-    --bg-secondary: #f1f5f9;
-    --card: #ffffff;
-    --border: #e5e7eb;
+    --warning: #D4A520;
+    --warning-light: #FDF3D8;
+    --warning-dark: #A68318;
 
-    /* Shadows */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+    --error: #C94848;
+    --error-light: #FADED9;
+    --error-dark: #9E3636;
+
+    --info: #4A728D;
+    --info-light: #E0EDF4;
+    --info-dark: #365566;
+
+    /* Semantic Aliases */
+    --text-primary: var(--ink-900);
+    --text-secondary: var(--ink-700);
+    --text-muted: var(--ink-500);
+    --text-disabled: var(--ink-300);
+
+    --bg: var(--ink-50);
+    --bg-elevated: var(--white);
+    --bg-subtle: #FAFAFA;
+
+    --border: var(--ink-100);
+    --border-strong: var(--ink-200);
+    --border-subtle: #F0F0F2;
+
+    /* Shadows (Warm-tinted) */
+    --shadow-xs: 0 1px 2px rgba(26, 26, 31, 0.04);
+    --shadow-sm: 0 2px 4px rgba(26, 26, 31, 0.06);
+    --shadow-md: 0 4px 12px rgba(26, 26, 31, 0.08);
+    --shadow-lg: 0 8px 24px rgba(26, 26, 31, 0.10);
+    --shadow-xl: 0 16px 48px rgba(26, 26, 31, 0.14);
 
     /* Border Radius */
-    --radius-sm: 8px;
+    --radius-sm: 6px;
     --radius: 10px;
-    --radius-lg: 16px;
+    --radius-lg: 14px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
 
     /* Transitions */
-    --transition: all 0.2s ease;
-    --transition-slow: all 0.3s ease;
+    --transition-fast: 0.15s ease;
+    --transition: 0.2s ease;
+    --transition-slow: 0.3s ease;
+
+    /* Spacing Scale */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
 }
 
 /* =============================================================================
@@ -65,44 +108,59 @@
 }
 
 .stApp {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: var(--bg);
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* =============================================================================
-   Typography
+   Typography System
    ============================================================================= */
 h1 {
-    font-size: 2.2rem !important;
-    font-weight: 700 !important;
-    color: var(--text-primary) !important;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
     letter-spacing: -0.02em;
-    line-height: 1.2 !important;
+    line-height: 1.25;
+    margin: 0 0 var(--space-4) 0;
 }
 
 h2 {
-    font-size: 1.3rem !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
-    margin-bottom: 0.5rem !important;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    margin: 0 0 var(--space-3) 0;
 }
 
 h3 {
-    font-size: 1.3rem !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
-    margin-bottom: 0.5rem !important;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin: 0 0 var(--space-2) 0;
+}
+
+h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin: 0 0 var(--space-2) 0;
 }
 
 p,
 .stMarkdown p {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     line-height: 1.6;
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-3) 0;
 }
 
-/* Force dark text everywhere */
+/* Force consistent text colors */
 .stApp,
 .stApp p,
 .stApp span,
@@ -110,74 +168,166 @@ p,
 .stApp div,
 .stMarkdown,
 .stMarkdown p {
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
 }
 
-/* Captions et texte secondaire */
+/* Captions and muted text */
 .stCaption,
 .stCaption p,
 small,
 .stApp small {
-    color: var(--text-secondary) !important;
-    font-size: 0.875rem !important;
+    color: var(--text-muted);
+    font-size: 0.8rem;
 }
 
 /* =============================================================================
-   Main Header Card
+   App Header - Minimal & Confident
    ============================================================================= */
-.main-header-card {
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+.app-header {
+    background: var(--secondary);
+    padding: var(--space-5) var(--space-6);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-4);
 }
 
-.main-header-card h1,
-.main-header-card p,
-.main-header-card span {
-    color: white !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.header-content {
+    flex: 1;
+    min-width: 200px;
 }
 
-.main-header-card .subtitle {
-    font-size: 1.1rem;
-    opacity: 0.95;
-    margin-top: 0.5rem;
+.header-title {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    letter-spacing: -0.02em;
 }
 
-/* Tech Stack Badges */
+.header-title i {
+    color: var(--primary);
+    font-size: 1.25rem;
+}
+
+.header-tagline {
+    color: var(--ink-300);
+    font-size: 0.9rem;
+    margin: var(--space-2) 0 0 0;
+    font-weight: 400;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-full);
+    background: rgba(46, 125, 90, 0.15);
+    color: #5CBA8D;
+}
+
+.status-badge.online i {
+    font-size: 0.5rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-badge.offline {
+    background: rgba(201, 72, 72, 0.15);
+    color: #E07B7B;
+}
+
+.header-stats {
+    display: flex;
+    gap: var(--space-4);
+}
+
+.header-stat {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--ink-300);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.header-stat i {
+    color: var(--ink-400);
+    font-size: 0.8rem;
+}
+
+/* Legacy main-header support */
+.main-header {
+    background: var(--secondary);
+    padding: var(--space-5) var(--space-6);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+}
+
+.main-title {
+    color: var(--white);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 var(--space-2) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.main-title i {
+    color: var(--primary);
+}
+
+.main-subtitle {
+    color: var(--ink-300);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Tech badges - Minimal style */
 .tech-badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
 }
 
 .tech-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    color: white !important;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
+    gap: var(--space-2);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ink-300);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
     font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     transition: var(--transition);
 }
 
 .tech-badge:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white);
 }
 
-.tech-badge svg,
-.tech-badge .icon {
-    width: 14px;
-    height: 14px;
+.tech-badge i {
+    font-size: 0.7rem;
 }
 
 /* =============================================================================
@@ -186,43 +336,44 @@ small,
 .section-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding-bottom: 0.75rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-4);
     border-bottom: 2px solid var(--primary);
 }
 
-.section-header .icon {
-    font-size: 1.3rem;
+.section-header i {
+    color: var(--primary);
+    font-size: 1.1rem;
 }
 
 .section-header h3 {
-    margin: 0 !important;
-    font-size: 1.3rem !important;
-    font-weight: 600 !important;
-    color: var(--text-primary) !important;
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 /* =============================================================================
-   Info Cards
+   Info Cards - Refined Left-Border Pattern
    ============================================================================= */
 .info-card {
-    background: var(--bg);
-    border-left: 4px solid var(--primary);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
+    background: var(--bg-subtle);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: var(--space-4) var(--space-5);
+    margin-bottom: var(--space-4);
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: var(--space-3);
 }
 
-.info-card .icon {
-    font-size: 1.2rem;
+.info-card i {
     color: var(--primary);
+    font-size: 1rem;
     flex-shrink: 0;
-    margin-top: 0.1rem;
+    margin-top: 2px;
 }
 
 .info-card .content {
@@ -231,267 +382,383 @@ small,
 
 .info-card .content p {
     margin: 0;
-    font-size: 1rem;
-    color: var(--text-secondary) !important;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
     line-height: 1.5;
 }
 
 .info-card.success {
     border-left-color: var(--success);
+    background: var(--success-light);
 }
 
-.info-card.success .icon {
+.info-card.success i {
     color: var(--success);
 }
 
 .info-card.warning {
     border-left-color: var(--warning);
+    background: var(--warning-light);
 }
 
-.info-card.warning .icon {
+.info-card.warning i {
     color: var(--warning);
 }
 
+.info-card.info {
+    border-left-color: var(--info);
+    background: var(--info-light);
+}
+
+.info-card.info i {
+    color: var(--info);
+}
+
 /* =============================================================================
-   Sidebar Navigation
+   Status Indicators
+   ============================================================================= */
+.status-online {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--success-light);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--success-dark);
+}
+
+.status-online i {
+    color: var(--success);
+    font-size: 0.6rem;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.status-offline {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--error-light);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--error-dark);
+}
+
+.status-offline i {
+    color: var(--error);
+}
+
+/* =============================================================================
+   Sidebar Navigation - Premium Dark Theme
    ============================================================================= */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, var(--card) 0%, var(--bg-secondary) 100%) !important;
-    border-right: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
+    background: linear-gradient(180deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 section[data-testid="stSidebar"]>div {
-    padding-top: 1.5rem;
+    padding-top: var(--space-5);
 }
 
 /* Sidebar Brand */
 .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0 1rem;
-    margin-bottom: 0.5rem;
+    gap: var(--space-3);
+    padding: 0 var(--space-4);
+    margin-bottom: var(--space-4);
 }
 
 .sidebar-brand i {
-    font-size: 1.75rem;
-    color: #a78bfa;
+    font-size: 1.5rem;
+    color: var(--primary);
 }
 
 .sidebar-brand span {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: #f1f5f9;
+    color: var(--white);
+    letter-spacing: -0.01em;
 }
 
 /* Navigation Title */
 .sidebar-nav-title {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: #94a3b8 !important;
+    color: var(--ink-400);
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin: 0 0 0.75rem 0 !important;
-    padding: 0 1rem;
+    margin: 0 0 var(--space-3) 0;
+    padding: 0 var(--space-4);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .sidebar-nav-title i {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
 }
 
 /* Sidebar Navigation Buttons */
 section[data-testid="stSidebar"] .stButton>button {
-    background: transparent !important;
-    color: #e2e8f0 !important;
-    border: none !important;
-    border-radius: var(--radius-sm) !important;
-    padding: 0.75rem 1rem !important;
-    font-weight: 500 !important;
-    font-size: 0.9rem !important;
-    text-align: left !important;
-    justify-content: flex-start !important;
-    box-shadow: none !important;
-    transition: var(--transition) !important;
-    margin-bottom: 0.25rem !important;
+    background: transparent;
+    color: var(--ink-200);
+    border: none;
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-4);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: left;
+    justify-content: flex-start;
+    box-shadow: none;
+    transition: var(--transition);
+    margin-bottom: var(--space-1);
 }
 
 section[data-testid="stSidebar"] .stButton>button:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--white);
     transform: translateX(4px);
 }
 
 section[data-testid="stSidebar"] .stButton>button[kind="primary"] {
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%) !important;
-    color: white !important;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3) !important;
+    background: var(--primary);
+    color: var(--ink-900);
+    font-weight: 600;
+    border-left: 3px solid var(--primary-dark);
 }
 
 section[data-testid="stSidebar"] .stButton>button[kind="primary"]:hover {
+    background: var(--primary-dark);
     transform: translateX(0);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
 }
 
-/* =============================================================================
-   Navigation Tabs
-   ============================================================================= */
-.stTabs [data-baseweb="tab-list"] {
-    gap: 8px;
-    background: var(--card);
-    padding: 8px 12px;
+/* Sidebar Info Card */
+.sidebar-info {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
 }
 
-.stTabs [data-baseweb="tab"] {
+.sidebar-info .title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--white);
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.sidebar-info .title i {
+    color: var(--primary);
+}
+
+.sidebar-info p {
+    font-size: 0.8rem;
+    color: var(--ink-400);
+    margin: 0 0 var(--space-3) 0;
+    line-height: 1.5;
+}
+
+/* Feature List in Sidebar */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    padding: var(--space-1) 0;
+}
+
+.feature-list li i {
+    color: var(--success);
+    font-size: 0.65rem;
+}
+
+/* Sidebar Status Indicators */
+.sidebar-status {
+    border-radius: var(--radius);
+    padding: var(--space-3);
+    margin: var(--space-3) 0;
+}
+
+.sidebar-status.success {
+    background: rgba(46, 125, 90, 0.12);
+    border-left: 3px solid var(--success);
+}
+
+.sidebar-status.error {
+    background: rgba(201, 72, 72, 0.12);
+    border-left: 3px solid var(--error);
+}
+
+.sidebar-status .status-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.sidebar-status.success .status-header {
+    color: #5CBA8D;
+}
+
+.sidebar-status.error .status-header {
+    color: #E07B7B;
+}
+
+.sidebar-status .status-details {
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-status .status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.7rem;
+    color: var(--ink-400);
+    padding: 2px 0;
+}
+
+.sidebar-status .status-item i {
+    width: 12px;
+    color: var(--ink-500);
+    font-size: 0.65rem;
+}
+
+/* Sidebar Links */
+.sidebar-links {
+    padding: 0;
+}
+
+.sidebar-links a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    color: var(--ink-400);
+    text-decoration: none;
+    font-size: 0.8rem;
     border-radius: var(--radius-sm);
-    padding: 12px 20px;
-    font-weight: 500;
-    font-size: 0.9rem;
     transition: var(--transition);
-    color: var(--text-primary) !important;
+    margin-bottom: 2px;
 }
 
-.stTabs [data-baseweb="tab"]:hover {
-    background: var(--bg-secondary);
+.sidebar-links a:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--primary);
+    transform: translateX(4px);
 }
 
-.stTabs [aria-selected="true"] {
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%) !important;
-    color: white !important;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-}
-
-/* =============================================================================
-   Custom Tab Buttons
-   ============================================================================= */
-/* Container for tab buttons - white box with border */
-div.tab-container {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 8px 12px;
-    box-shadow: var(--shadow-sm);
-}
-
-/* All tab buttons base style */
-div[data-testid="stHorizontalBlock"] button {
-    border-radius: var(--radius-sm) !important;
-    font-weight: 500 !important;
-    padding: 12px 20px !important;
-}
-
-/* Secondary (inactive) tab buttons */
-div[data-testid="stHorizontalBlock"] button[kind="secondary"] {
-    background: transparent !important;
-    color: var(--text-primary) !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-div[data-testid="stHorizontalBlock"] button[kind="secondary"]:hover {
-    background: var(--bg-secondary) !important;
-}
-
-/* Primary (active) tab button */
-div[data-testid="stHorizontalBlock"] button[kind="primary"] {
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%) !important;
-    color: white !important;
-    border: none !important;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3) !important;
-    border-bottom: 3px solid #f59e0b !important;
+.sidebar-links a i {
+    width: 14px;
+    font-size: 0.85rem;
 }
 
 /* =============================================================================
-   Buttons
+   Primary Buttons - Amber Gold Solid
    ============================================================================= */
 .stButton>button {
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%) !important;
-    color: white !important;
-    border: none !important;
-    padding: 14px 28px !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    border-radius: var(--radius) !important;
-    box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
-    transition: var(--transition) !important;
+    background: var(--primary);
+    color: var(--ink-900);
+    border: none;
+    padding: var(--space-3) var(--space-6);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
     letter-spacing: 0.01em;
 }
 
 .stButton>button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+    background: var(--primary-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
 }
 
 .stButton>button:active {
     transform: translateY(0);
+    box-shadow: var(--shadow-sm);
 }
 
 /* =============================================================================
-   Alert Boxes
+   Alert Boxes - Refined Styling
    ============================================================================= */
 .stAlert {
-    border-radius: var(--radius) !important;
-    padding: 1rem 1.25rem !important;
-    border: none !important;
+    border-radius: var(--radius);
+    padding: var(--space-4) var(--space-5);
+    border: none;
 }
 
-/* Info box */
+/* Info */
 div[data-testid="stAlert"]:has(.stInfo),
 .stInfo {
-    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%) !important;
-    border-left: 4px solid var(--primary) !important;
-    border-radius: 0 var(--radius) var(--radius) 0 !important;
+    background: var(--info-light);
+    border-left: 3px solid var(--info);
+    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
-/* Success box */
+/* Success */
 .stSuccess {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
-    border-left: 4px solid var(--success) !important;
-    border-radius: 0 var(--radius) var(--radius) 0 !important;
+    background: var(--success-light);
+    border-left: 3px solid var(--success);
+    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
-/* Warning box */
+/* Warning */
 .stWarning {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
-    border-left: 4px solid var(--warning) !important;
-    border-radius: 0 var(--radius) var(--radius) 0 !important;
+    background: var(--warning-light);
+    border-left: 3px solid var(--warning);
+    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
-/* Error box */
+/* Error */
 .stError {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
-    border-left: 4px solid var(--danger) !important;
-    border-radius: 0 var(--radius) var(--radius) 0 !important;
+    background: var(--error-light);
+    border-left: 3px solid var(--error);
+    border-radius: 0 var(--radius) var(--radius) 0;
 }
 
 /* =============================================================================
    Expanders
    ============================================================================= */
 .streamlit-expanderHeader {
-    font-weight: 500 !important;
-    font-size: 0.95rem !important;
-    color: var(--text-primary) !important;
-    background: var(--bg-secondary) !important;
-    border-radius: var(--radius-sm) !important;
-    padding: 0.75rem 1rem !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background: var(--bg-subtle);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-4);
     transition: var(--transition);
+    border: 1px solid var(--border);
 }
 
 .streamlit-expanderHeader:hover {
-    background: #e2e8f0 !important;
+    background: var(--ink-100);
 }
 
 .streamlit-expanderContent {
-    background: var(--card);
+    background: var(--bg-elevated);
     border: 1px solid var(--border);
     border-top: none;
-    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-    padding: 1rem !important;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: var(--space-4);
 }
 
 /* =============================================================================
@@ -499,31 +766,31 @@ div[data-testid="stAlert"]:has(.stInfo),
    ============================================================================= */
 /* Selectbox */
 .stSelectbox>div>div {
-    background-color: #ffffff !important;
-    border: 2px solid var(--border) !important;
-    border-radius: var(--radius-sm) !important;
+    background-color: var(--white);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
     transition: var(--transition);
 }
 
 .stSelectbox>div>div:hover {
-    border-color: #cbd5e1 !important;
+    border-color: var(--border-strong);
 }
 
 .stSelectbox>div>div:focus-within {
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
 }
 
-/* Selectbox text visibility */
+/* Selectbox text */
 .stSelectbox input {
-    background-color: transparent !important;
-    color: var(--text-primary) !important;
+    background-color: transparent;
+    color: var(--text-primary);
 }
 
 .stSelectbox [data-baseweb="select"] * {
-    color: var(--text-primary) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+    color: var(--text-primary);
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Dropdown Menu */
@@ -532,11 +799,11 @@ div[data-baseweb="menu"],
 ul[role="listbox"],
 div[data-baseweb="popover"] ul,
 div[data-baseweb="select"] ul {
-    background-color: #ffffff !important;
-    background: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius-sm) !important;
-    box-shadow: var(--shadow-lg) !important;
+    background-color: var(--white);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
 }
 
 /* Dropdown items */
@@ -546,9 +813,9 @@ li[role="option"] span,
 div[data-baseweb="menu"] li,
 div[data-baseweb="menu"] li div,
 div[data-baseweb="menu"] li span {
-    color: var(--text-primary) !important;
-    background-color: #ffffff !important;
-    background: #ffffff !important;
+    color: var(--text-primary);
+    background-color: var(--white);
+    background: var(--white);
 }
 
 /* Hover state */
@@ -556,9 +823,9 @@ li[role="option"]:hover,
 li[role="option"]:hover div,
 li[role="option"]:hover span,
 div[data-baseweb="menu"] li:hover {
-    background-color: var(--bg-secondary) !important;
-    background: var(--bg-secondary) !important;
-    color: var(--text-primary) !important;
+    background-color: var(--primary-light);
+    background: var(--primary-light);
+    color: var(--text-primary);
 }
 
 /* Selected item */
@@ -568,72 +835,71 @@ li[role="option"][aria-selected="true"] span,
 li[data-highlighted="true"],
 li[data-highlighted="true"] div,
 li[data-highlighted="true"] span {
-    background-color: #ede9fe !important;
-    background: #ede9fe !important;
-    color: var(--primary-end) !important;
+    background-color: var(--primary-light);
+    background: var(--primary-light);
+    color: var(--primary-dark);
 }
 
 /* Labels */
 .stSelectbox label,
 .stSlider label,
 .stCheckbox label {
-    color: var(--text-primary) !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-    margin-bottom: 0.25rem !important;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: var(--space-1);
 }
 
-/* Help tooltip icon */
+/* Help tooltip */
 .stTooltipIcon {
-    color: var(--text-muted) !important;
+    color: var(--text-muted);
     opacity: 0.7;
     transition: var(--transition);
 }
 
 .stTooltipIcon:hover {
     opacity: 1;
-    color: var(--primary) !important;
+    color: var(--primary);
 }
 
 /* =============================================================================
    Metrics
    ============================================================================= */
 div[data-testid="stMetric"] {
-    background: linear-gradient(135deg, var(--card) 0%, var(--bg-secondary) 100%);
-    padding: 1.5rem;
+    background: var(--bg-elevated);
+    padding: var(--space-5);
     border-radius: var(--radius);
     border: 1px solid var(--border);
     transition: var(--transition);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-xs);
 }
 
 div[data-testid="stMetric"]:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
 }
 
 div[data-testid="stMetricLabel"] {
-    color: var(--text-secondary) !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 div[data-testid="stMetricValue"] {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
 }
 
 /* =============================================================================
    DataFrames / Tables
    ============================================================================= */
 .stDataFrame {
-    border-radius: var(--radius) !important;
+    border-radius: var(--radius);
     overflow: hidden;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-sm);
     border: 1px solid var(--border);
 }
 
@@ -641,33 +907,33 @@ div[data-testid="stMetricValue"] {
    Progress Bars
    ============================================================================= */
 .stProgress>div>div>div>div {
-    background: linear-gradient(90deg, var(--primary-start) 0%, var(--primary-end) 100%) !important;
-    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border-radius: var(--radius-full);
 }
 
 /* =============================================================================
    Slider
    ============================================================================= */
 .stSlider>div>div>div {
-    background: var(--primary) !important;
+    background: var(--primary);
 }
 
 /* =============================================================================
    Checkbox
    ============================================================================= */
 .stCheckbox {
-    padding: 8px 0;
+    padding: var(--space-2) 0;
 }
 
 .stCheckbox>label>span {
-    font-weight: 400 !important;
+    font-weight: 400;
 }
 
 /* =============================================================================
    Spinner / Loading
    ============================================================================= */
 .stSpinner>div {
-    border-top-color: var(--primary) !important;
+    border-top-color: var(--primary);
 }
 
 /* =============================================================================
@@ -676,7 +942,7 @@ div[data-testid="stMetricValue"] {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
     }
 
     to {
@@ -693,107 +959,65 @@ div[data-testid="stMetricValue"] {
     }
 
     50% {
-        opacity: 0.7;
+        opacity: 0.5;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
     }
 }
 
 .element-container {
-    animation: fadeIn 0.3s ease-out;
-}
-
-/* Loading state animation */
-.stInfo[data-loading="true"] {
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: fadeIn 0.25s ease-out;
 }
 
 /* =============================================================================
    Cards / Containers
    ============================================================================= */
 div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"] {
-    background: var(--card);
+    background: var(--bg-elevated);
     border-radius: var(--radius);
-    padding: 1.25rem;
+    padding: var(--space-5);
     border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-xs);
     transition: var(--transition);
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-3);
 }
 
 div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
-    box-shadow: var(--shadow-md);
-    border-color: #cbd5e1;
+    box-shadow: var(--shadow-sm);
+    border-color: var(--border-strong);
 }
 
 /* =============================================================================
-   Status Indicator
+   Result Cards (Recommendation Display)
    ============================================================================= */
-.status-online {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--success-end) !important;
-}
-
-.status-online::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-.status-offline {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--danger-end) !important;
-}
-
-/* =============================================================================
-   Main Header (alternate class names)
-   ============================================================================= */
-.main-header {
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
+.result-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    transition: var(--transition);
 }
 
-.main-title {
-    color: white !important;
-    font-size: 2.2rem !important;
-    font-weight: 700 !important;
-    margin: 0 0 0.5rem 0 !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+.result-card:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--primary);
 }
 
-.main-subtitle {
-    color: rgba(255, 255, 255, 0.95) !important;
-    font-size: 1.1rem;
-    margin: 0;
-}
-
-/* =============================================================================
-   Result Cards (Low/Medium/High)
-   ============================================================================= */
 .result-card-low {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-    border-left: 4px solid var(--success);
+    background: var(--success-light);
+    border-left: 3px solid var(--success);
     border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
 }
 
 .result-card-low i {
@@ -801,11 +1025,11 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 }
 
 .result-card-medium {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border-left: 4px solid var(--warning);
+    background: var(--warning-light);
+    border-left: 3px solid var(--warning);
     border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
 }
 
 .result-card-medium i {
@@ -813,78 +1037,35 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 }
 
 .result-card-high {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-    border-left: 4px solid var(--danger);
+    background: var(--error-light);
+    border-left: 3px solid var(--error);
     border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
 }
 
 .result-card-high i {
-    color: var(--danger);
+    color: var(--error);
 }
 
 /* =============================================================================
-   Probability Values & Labels
-   ============================================================================= */
-.proba-value {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.proba-value.success {
-    background: linear-gradient(135deg, var(--success-start) 0%, var(--success-end) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.proba-value.warning {
-    background: linear-gradient(135deg, var(--warning-start) 0%, var(--warning-end) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.proba-value.danger {
-    background: linear-gradient(135deg, var(--danger-start) 0%, var(--danger-end) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.proba-label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0.5rem;
-}
-
-/* =============================================================================
-   Recommendation Boxes
+   Recommendation Box Pattern
    ============================================================================= */
 .recommendation {
-    background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-    border-left: 4px solid var(--primary);
+    background: var(--primary-light);
+    border-left: 3px solid var(--primary);
     border-radius: 0 var(--radius) var(--radius) 0;
-    padding: 1rem 1.25rem;
-    margin: 1rem 0;
+    padding: var(--space-4) var(--space-5);
+    margin: var(--space-4) 0;
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
+    gap: var(--space-3);
 }
 
 .recommendation i {
     color: var(--primary);
-    font-size: 1.2rem;
-    margin-top: 0.15rem;
+    font-size: 1rem;
+    margin-top: 2px;
 }
 
 .recommendation .content {
@@ -893,217 +1074,39 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 
 .recommendation .content p {
     margin: 0;
-    color: var(--text-primary) !important;
+    color: var(--text-primary);
 }
 
 /* =============================================================================
-   Sidebar Info Cards
-   ============================================================================= */
-.sidebar-info {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius);
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-.sidebar-info .title {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #f1f5f9;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.sidebar-info .title i {
-    color: #a78bfa;
-}
-
-.sidebar-info .value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #a78bfa;
-}
-
-.sidebar-info p {
-    font-size: 0.85rem;
-    color: #94a3b8;
-    margin: 0 0 0.75rem 0;
-}
-
-/* Feature List in Sidebar */
-.feature-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.feature-list li {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: #94a3b8;
-    padding: 0.25rem 0;
-}
-
-.feature-list li i {
-    color: var(--success);
-    font-size: 0.7rem;
-}
-
-/* Sidebar Status Indicators */
-.sidebar-status {
-    border-radius: var(--radius);
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-}
-
-.sidebar-status.success {
-    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-    border-left: 3px solid var(--success);
-}
-
-.sidebar-status.error {
-    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-    border-left: 3px solid var(--danger);
-}
-
-.status-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.sidebar-status.success .status-header {
-    color: var(--success-end);
-}
-
-.sidebar-status.error .status-header {
-    color: var(--danger-end);
-}
-
-.status-details {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.status-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    padding: 0.15rem 0;
-}
-
-.status-item i {
-    width: 14px;
-    color: var(--text-muted);
-}
-
-/* Sidebar Links */
-.sidebar-links {
-    padding: 0;
-}
-
-.sidebar-links a {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    color: #94a3b8 !important;
-    text-decoration: none;
-    font-size: 0.85rem;
-    border-radius: var(--radius-sm);
-    transition: var(--transition);
-    margin-bottom: 0.25rem;
-}
-
-.sidebar-links a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #a78bfa !important;
-    transform: translateX(4px);
-}
-
-.sidebar-links a i {
-    width: 16px;
-    color: #64748b;
-}
-
-/* =============================================================================
-   Footer
+   Footer - Clean & Minimal
    ============================================================================= */
 .footer {
-    background: var(--card);
+    background: var(--bg-elevated);
     border-top: 1px solid var(--border);
-    padding: 1.5rem;
-    margin-top: 3rem;
+    padding: var(--space-6) var(--space-4);
+    margin-top: var(--space-12);
     text-align: center;
     border-radius: var(--radius) var(--radius) 0 0;
-}
-
-.footer p {
-    color: var(--text-secondary) !important;
-    font-size: 0.875rem;
-    margin: 0;
-}
-
-.footer .social-links {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 0.75rem;
-}
-
-.footer .social-links a {
-    color: var(--text-muted);
-    font-size: 1.25rem;
-    transition: var(--transition);
-    text-decoration: none;
-}
-
-.footer .social-links a:hover {
-    color: var(--primary);
-    transform: translateY(-2px);
-}
-
-/* =============================================================================
-   Enhanced Footer
-   ============================================================================= */
-.footer {
-    background: linear-gradient(135deg, var(--card) 0%, var(--bg-secondary) 100%);
-    border-top: 2px solid var(--border);
-    padding: 2rem 1.5rem;
-    margin-top: 3rem;
-    text-align: center;
-    border-radius: var(--radius) var(--radius) 0 0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .footer-content {
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
 .footer-brand {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-4);
 }
 
 .footer-brand h4 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-primary) !important;
-    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2) 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .footer-brand h4 i {
@@ -1111,44 +1114,44 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 }
 
 .footer-brand p {
-    color: var(--text-secondary) !important;
-    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
     margin: 0;
 }
 
 .footer-tech {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-5);
 }
 
 .footer-label {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--text-muted) !important;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem !important;
+    letter-spacing: 0.08em;
+    margin-bottom: var(--space-3);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .footer-badges {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.5rem;
+    gap: var(--space-2);
 }
 
 .footer-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+    gap: var(--space-1);
     background: var(--bg);
-    color: var(--text-secondary) !important;
-    padding: 0.35rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
     font-weight: 500;
     border: 1px solid var(--border);
     transition: var(--transition);
@@ -1156,26 +1159,26 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 
 .footer-badge:hover {
     border-color: var(--primary);
-    color: var(--primary) !important;
+    color: var(--primary);
 }
 
 .footer-badge i {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
 }
 
 .footer .social-links {
     display: flex;
     justify-content: center;
-    gap: 1.25rem;
-    margin: 1.5rem 0 1rem;
+    gap: var(--space-4);
+    margin: var(--space-5) 0 var(--space-4);
 }
 
 .footer .social-links a {
     color: var(--text-muted);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     transition: var(--transition);
     text-decoration: none;
-    padding: 0.5rem;
+    padding: var(--space-2);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1184,105 +1187,132 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
 
 .footer .social-links a:hover {
     color: var(--primary);
-    background: rgba(102, 126, 234, 0.1);
-    transform: translateY(-3px);
+    background: var(--primary-light);
 }
 
 .source-code-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    background: linear-gradient(135deg, var(--primary-start) 0%, var(--primary-end) 100%);
-    color: white !important;
-    padding: 0.5rem 1.25rem;
-    border-radius: 20px;
+    gap: var(--space-2);
+    background: var(--secondary);
+    color: var(--white);
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-full);
     font-size: 0.85rem;
     font-weight: 500;
     text-decoration: none;
-    margin: 1rem 0;
+    margin: var(--space-4) 0;
     transition: var(--transition);
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--shadow-sm);
 }
 
 .source-code-link:hover {
+    background: var(--secondary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.source-code-link i {
-    font-size: 0.9rem;
+    box-shadow: var(--shadow-md);
 }
 
 .footer-license {
-    font-size: 0.75rem;
-    color: var(--text-muted) !important;
-    margin-top: 1rem !important;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: var(--space-4);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.35rem;
+    gap: var(--space-2);
 }
 
-.footer-license i {
-    font-size: 0.7rem;
+/* =============================================================================
+   First-Time User Banner
+   ============================================================================= */
+.welcome-banner {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 100%);
+    border: 1px solid var(--primary);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-5);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+}
+
+.welcome-banner i.banner-icon {
+    color: var(--primary);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.welcome-banner .banner-content h3 {
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2) 0;
+    font-size: 1rem;
+}
+
+.welcome-banner .banner-content p {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 /* =============================================================================
    MOBILE-FIRST RESPONSIVE DESIGN
-   Optimized for 90% phone usage with ergonomic touch targets
    ============================================================================= */
 
-/* --- Tablet and below (768px) --- */
+/* Tablet and below (768px) */
 @media (max-width: 768px) {
-
-    /* Base mobile adjustments */
     .stApp {
-        padding: 0 !important;
+        padding: 0;
     }
 
-    /* Main content area - reduce padding to maximize space */
     .main .block-container {
-        padding: 0.75rem !important;
-        max-width: 100% !important;
+        padding: var(--space-3);
+        max-width: 100%;
     }
 
-    /* Typography for mobile */
+    /* Typography */
     h1,
-    .main-title {
-        font-size: 1.4rem !important;
-        line-height: 1.3 !important;
+    .main-title,
+    .header-title {
+        font-size: 1.25rem;
+        line-height: 1.3;
     }
 
     h2,
     h3 {
-        font-size: 1.15rem !important;
+        font-size: 1.05rem;
     }
 
     p,
     .stMarkdown p {
-        font-size: 0.95rem !important;
+        font-size: 0.9rem;
     }
 
-    /* Main header - compact but visible */
-    .main-header-card,
+    /* Header */
+    .app-header,
     .main-header {
-        padding: 1rem 0.875rem;
-        margin-bottom: 1rem;
-        border-radius: 12px;
+        padding: var(--space-4);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
     }
 
+    .header-meta {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .header-tagline,
     .main-subtitle {
-        font-size: 0.875rem;
-        line-height: 1.4;
+        font-size: 0.8rem;
     }
 
-    /* Tech badges - horizontal scroll on mobile */
+    /* Tech badges scroll */
     .tech-badges {
-        display: flex;
         flex-wrap: nowrap;
         overflow-x: auto;
-        gap: 0.4rem;
-        padding-bottom: 0.25rem;
+        gap: var(--space-2);
+        padding-bottom: var(--space-2);
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
@@ -1292,447 +1322,217 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
     }
 
     .tech-badge {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.7rem;
+        padding: var(--space-1) var(--space-2);
+        font-size: 0.65rem;
         white-space: nowrap;
         flex-shrink: 0;
     }
 
-    /* --- SIDEBAR MOBILE OPTIMIZATION --- */
+    /* Sidebar */
     section[data-testid="stSidebar"] {
-        width: 85% !important;
-        max-width: 320px !important;
-        z-index: 1000;
+        width: 85%;
+        max-width: 300px;
     }
 
-    section[data-testid="stSidebar"]>div {
-        padding: 1rem 0.75rem !important;
-    }
-
-    /* Larger touch targets for sidebar nav buttons */
     section[data-testid="stSidebar"] .stButton>button {
-        padding: 1rem 0.875rem !important;
-        font-size: 1rem !important;
-        min-height: 52px !important;
-        margin-bottom: 0.5rem !important;
-        border-radius: 10px !important;
+        padding: var(--space-4);
+        font-size: 0.95rem;
+        min-height: 52px;
+        margin-bottom: var(--space-2);
     }
 
-    .sidebar-brand i {
-        font-size: 1.5rem;
-    }
-
-    .sidebar-brand span {
-        font-size: 1rem;
-    }
-
-    /* --- MAIN ACTION BUTTONS - LARGE TOUCH TARGETS --- */
+    /* Main buttons - large touch targets */
     .stButton>button {
-        padding: 1rem 1.5rem !important;
-        font-size: 1rem !important;
-        min-height: 56px !important;
-        width: 100% !important;
-        border-radius: 14px !important;
-        font-weight: 600 !important;
-        margin: 0.5rem 0 !important;
+        padding: var(--space-4) var(--space-5);
+        font-size: 0.95rem;
+        min-height: 54px;
+        width: 100%;
+        border-radius: var(--radius-lg);
     }
 
-    /* Primary CTA buttons even larger */
-    .stButton>button[kind="primary"] {
-        min-height: 60px !important;
-        font-size: 1.05rem !important;
-    }
-
-    /* --- FORM CONTROLS - EASY TO TAP --- */
-    /* Selectbox larger */
+    /* Form controls */
     .stSelectbox>div>div {
-        min-height: 52px !important;
-        font-size: 1rem !important;
+        min-height: 50px;
+        font-size: 0.95rem;
     }
 
-    .stSelectbox>div>div>div {
-        padding: 0.75rem 1rem !important;
-    }
-
-    /* Selectbox label */
-    .stSelectbox label {
-        font-size: 0.9rem !important;
-        margin-bottom: 0.5rem !important;
-    }
-
-    /* Dropdown options - large touch targets */
     li[role="option"],
     div[data-baseweb="menu"] li {
-        min-height: 48px !important;
-        padding: 0.75rem 1rem !important;
-        font-size: 0.95rem !important;
-        display: flex !important;
-        align-items: center !important;
+        min-height: 48px;
+        padding: var(--space-3) var(--space-4);
+        font-size: 0.9rem;
     }
 
-    /* Slider - larger touch area */
-    .stSlider>div {
-        padding: 0.5rem 0 !important;
-    }
-
+    /* Slider */
     .stSlider>div>div>div>div {
-        height: 8px !important;
+        height: 8px;
     }
 
     .stSlider>div>div>div>div>div {
-        width: 28px !important;
-        height: 28px !important;
+        width: 26px;
+        height: 26px;
     }
 
-    /* Checkbox - larger touch target */
-    .stCheckbox {
-        padding: 0.75rem 0 !important;
-    }
-
+    /* Checkbox */
     .stCheckbox>label {
-        font-size: 0.95rem !important;
-        min-height: 48px !important;
-        display: flex !important;
-        align-items: center !important;
+        font-size: 0.9rem;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
     }
 
-    .stCheckbox span[data-testid="stCheckbox"] {
-        width: 24px !important;
-        height: 24px !important;
-    }
-
-    /* --- CONTENT LAYOUT --- */
-    /* Stack columns vertically */
+    /* Stack columns */
     div[data-testid="stHorizontalBlock"] {
-        flex-direction: column !important;
-        gap: 0.75rem !important;
+        flex-direction: column;
+        gap: var(--space-3);
     }
 
-    /* Column items full width */
     div[data-testid="stHorizontalBlock"]>div {
-        width: 100% !important;
-        flex: 1 1 100% !important;
+        width: 100%;
+        flex: 1 1 100%;
     }
 
-    /* --- SECTION HEADERS --- */
+    /* Section headers */
     .section-header {
-        margin-top: 1.25rem;
-        margin-bottom: 0.75rem;
-        padding-bottom: 0.5rem;
-    }
-
-    .section-header i {
-        font-size: 1.1rem;
+        margin-top: var(--space-4);
+        margin-bottom: var(--space-3);
+        padding-bottom: var(--space-2);
     }
 
     .section-header h3 {
-        font-size: 1.1rem !important;
-    }
-
-    /* --- INFO CARDS --- */
-    .info-card {
-        padding: 0.875rem 1rem;
-        margin-bottom: 0.875rem;
-    }
-
-    .info-card i {
         font-size: 1rem;
+    }
+
+    /* Info cards */
+    .info-card {
+        padding: var(--space-3) var(--space-4);
     }
 
     .info-card p {
-        font-size: 0.9rem !important;
-        line-height: 1.5;
+        font-size: 0.85rem;
     }
 
-    /* --- STATUS INDICATORS --- */
-    .status-online,
-    .status-offline {
-        padding: 0.5rem 0.875rem;
-        font-size: 0.8rem;
-    }
-
-    /* --- EXPANDERS --- */
+    /* Expanders */
     .streamlit-expanderHeader {
-        padding: 0.875rem 1rem !important;
-        font-size: 0.95rem !important;
-        min-height: 48px !important;
+        padding: var(--space-3) var(--space-4);
+        font-size: 0.9rem;
+        min-height: 48px;
     }
 
-    .streamlit-expanderContent {
-        padding: 0.875rem !important;
-    }
-
-    /* --- DATA TABLES --- */
-    .stDataFrame {
-        font-size: 0.85rem !important;
-    }
-
-    .stDataFrame [data-testid="stTable"] {
-        overflow-x: auto !important;
-    }
-
-    /* --- METRICS --- */
+    /* Metrics */
     div[data-testid="stMetric"] {
-        padding: 1rem;
-        border-radius: 12px;
+        padding: var(--space-4);
     }
 
     div[data-testid="stMetricValue"] {
-        font-size: 1.5rem !important;
+        font-size: 1.35rem;
     }
 
-    div[data-testid="stMetricLabel"] {
-        font-size: 0.8rem !important;
-    }
-
-    /* --- RESULT CARDS --- */
-    .proba-value {
-        font-size: 2rem;
-    }
-
-    .result-card-low,
-    .result-card-medium,
-    .result-card-high {
-        padding: 1rem;
-        border-radius: 0 12px 12px 0;
-    }
-
-    /* --- RECOMMENDATIONS DISPLAY --- */
-    .recommendation {
-        padding: 0.875rem 1rem;
-    }
-
-    /* --- ALERTS --- */
-    .stAlert {
-        padding: 0.875rem 1rem !important;
-        font-size: 0.9rem !important;
-    }
-
-    /* --- FOOTER --- */
+    /* Footer */
     .footer {
-        padding: 1.25rem 1rem;
-        margin-top: 2rem;
+        padding: var(--space-5) var(--space-4);
+        margin-top: var(--space-8);
     }
 
     .footer-brand h4 {
-        font-size: 1rem;
+        font-size: 0.95rem;
         flex-wrap: wrap;
     }
 
-    .footer-brand p {
-        font-size: 0.8rem;
-    }
-
-    .footer-badges {
-        gap: 0.35rem;
-    }
-
     .footer-badge {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.7rem;
-    }
-
-    .footer .social-links {
-        gap: 0.75rem;
-        margin: 1rem 0;
+        padding: var(--space-1) var(--space-2);
+        font-size: 0.65rem;
     }
 
     .footer .social-links a {
-        font-size: 1.5rem;
-        padding: 0.75rem;
+        font-size: 1.35rem;
+        padding: var(--space-3);
         min-width: 48px;
         min-height: 48px;
     }
 
     .source-code-link {
-        padding: 0.75rem 1.25rem;
-        font-size: 0.9rem;
-        min-height: 48px;
-    }
-
-    .footer-license {
-        font-size: 0.7rem !important;
-    }
-
-    /* --- SIDEBAR INFO --- */
-    .sidebar-info {
-        padding: 0.875rem;
-    }
-
-    .sidebar-info .title {
+        padding: var(--space-3) var(--space-4);
         font-size: 0.85rem;
-    }
-
-    .sidebar-info p {
-        font-size: 0.8rem;
-    }
-
-    .feature-list li {
-        font-size: 0.75rem;
-        padding: 0.35rem 0;
-    }
-
-    .sidebar-status {
-        padding: 0.875rem;
-    }
-
-    .sidebar-links a {
-        padding: 0.75rem;
         min-height: 48px;
-        font-size: 0.9rem;
+    }
+
+    /* Welcome banner */
+    .welcome-banner {
+        flex-direction: column;
+        padding: var(--space-4);
     }
 }
 
-/* --- PHONE SCREENS (576px and below) --- */
+/* Phone screens (576px and below) */
 @media (max-width: 576px) {
-
-    /* Even more compact for phones */
     .main .block-container {
-        padding: 0.5rem !important;
+        padding: var(--space-2);
     }
 
     h1,
-    .main-title {
-        font-size: 1.25rem !important;
+    .main-title,
+    .header-title {
+        font-size: 1.1rem;
     }
 
-    .main-header-card,
+    .app-header,
     .main-header {
-        padding: 0.875rem 0.75rem;
-    }
-
-    .main-subtitle {
-        font-size: 0.8rem;
-    }
-
-    /* Tech badges smaller on phones */
-    .tech-badge {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.65rem;
-    }
-
-    /* Section headers */
-    .section-header h3 {
-        font-size: 1rem !important;
-    }
-
-    /* Info cards more compact */
-    .info-card {
-        padding: 0.75rem 0.875rem;
-    }
-
-    .info-card p {
-        font-size: 0.85rem !important;
-    }
-
-    /* Buttons still large for touch */
-    .stButton>button {
-        min-height: 54px !important;
-        font-size: 0.95rem !important;
-        padding: 0.875rem 1rem !important;
-    }
-
-    /* Metrics compact */
-    div[data-testid="stMetricValue"] {
-        font-size: 1.35rem !important;
-    }
-
-    /* Footer compact */
-    .footer-brand h4 {
-        font-size: 0.95rem;
-    }
-}
-
-/* --- EXTRA SMALL PHONES (400px and below) --- */
-@media (max-width: 400px) {
-
-    h1,
-    .main-title {
-        font-size: 1.15rem !important;
-    }
-
-    .main-header-card,
-    .main-header {
-        padding: 0.75rem 0.625rem;
-    }
-
-    .main-subtitle {
-        font-size: 0.75rem;
-    }
-
-    .tech-badges {
-        gap: 0.3rem;
+        padding: var(--space-3);
     }
 
     .tech-badge {
-        padding: 0.2rem 0.4rem;
+        padding: 4px var(--space-2);
         font-size: 0.6rem;
     }
 
     .section-header h3 {
-        font-size: 0.95rem !important;
+        font-size: 0.95rem;
     }
 
-    /* Still maintain minimum touch targets */
+    div[data-testid="stMetricValue"] {
+        font-size: 1.25rem;
+    }
+}
+
+/* Extra small phones (400px and below) */
+@media (max-width: 400px) {
+
+    h1,
+    .main-title,
+    .header-title {
+        font-size: 1rem;
+    }
+
+    .app-header,
+    .main-header {
+        padding: var(--space-3) var(--space-2);
+    }
+
+    .tech-badge {
+        padding: 3px 6px;
+        font-size: 0.55rem;
+    }
+
     .stButton>button {
-        min-height: 52px !important;
+        min-height: 50px;
     }
 
     li[role="option"] {
-        min-height: 44px !important;
+        min-height: 44px;
     }
 }
 
-/* --- LANDSCAPE MODE ON PHONES --- */
-@media (max-height: 500px) and (orientation: landscape) {
-
-    .main-header-card,
-    .main-header {
-        padding: 0.75rem;
-        margin-bottom: 0.75rem;
-    }
-
-    .main-title {
-        font-size: 1.1rem !important;
-    }
-
-    .main-subtitle {
-        display: none;
-    }
-
-    .tech-badges {
-        display: none;
-    }
-
-    .section-header {
-        margin-top: 0.5rem;
-    }
-
-    /* Reduce vertical spacing */
-    .stButton>button {
-        min-height: 48px !important;
-        margin: 0.25rem 0 !important;
-    }
-
-    .footer {
-        padding: 1rem;
-        margin-top: 1rem;
-    }
-}
-
-/* --- TOUCH DEVICE OPTIMIZATIONS --- */
+/* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
-
-    /* Remove hover effects that don't work well on touch */
     .stButton>button:hover {
-        transform: none !important;
+        transform: none;
     }
 
     div[data-testid="stMetric"]:hover {
-        transform: none !important;
+        transform: none;
     }
 
-    /* Ensure minimum touch target sizes (48px per WCAG) */
     button,
     a,
     input[type="checkbox"],
@@ -1740,26 +1540,53 @@ div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"]:hover {
         min-height: 48px;
     }
 
-    /* Native scroll behavior */
     * {
         -webkit-tap-highlight-color: transparent;
     }
 
-    /* Prevent text selection on buttons */
     button {
         user-select: none;
         -webkit-user-select: none;
     }
 }
 
-/* --- SAFE AREA INSETS (for notched phones) --- */
+/* Safe area insets for notched phones */
 @supports (padding: max(0px)) {
     .main .block-container {
-        padding-left: max(0.75rem, env(safe-area-inset-left)) !important;
-        padding-right: max(0.75rem, env(safe-area-inset-right)) !important;
+        padding-left: max(var(--space-3), env(safe-area-inset-left));
+        padding-right: max(var(--space-3), env(safe-area-inset-right));
     }
 
     .footer {
-        padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important;
+        padding-bottom: max(var(--space-5), env(safe-area-inset-bottom));
+    }
+}
+
+/* Landscape mode on phones */
+@media (max-height: 500px) and (orientation: landscape) {
+
+    .app-header,
+    .main-header {
+        padding: var(--space-3);
+        margin-bottom: var(--space-3);
+    }
+
+    .header-tagline,
+    .main-subtitle {
+        display: none;
+    }
+
+    .tech-badges {
+        display: none;
+    }
+
+    .stButton>button {
+        min-height: 46px;
+        margin: var(--space-1) 0;
+    }
+
+    .footer {
+        padding: var(--space-4);
+        margin-top: var(--space-4);
     }
 }

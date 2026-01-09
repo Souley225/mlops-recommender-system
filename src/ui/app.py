@@ -20,7 +20,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="Recommandation Films",
-    page_icon="🎬",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -121,57 +121,89 @@ def api_history(user_id: int) -> Optional[Dict]:
 
 
 # =============================================================================
-# Composants UI
+# Helper Functions
+# =============================================================================
+
+def get_score_label(score: float) -> str:
+    """Convert score to qualitative label."""
+    if score >= 0.8:
+        return "Tres recommande"
+    elif score >= 0.6:
+        return "Recommande"
+    else:
+        return "A decouvrir"
+
+
+def get_score_icon(score: float) -> str:
+    """Get icon based on score."""
+    if score >= 0.8:
+        return "fa-star"
+    elif score >= 0.6:
+        return "fa-thumbs-up"
+    else:
+        return "fa-lightbulb"
+
+
+# =============================================================================
+# UI Components
 # =============================================================================
 
 def header() -> None:
-    """Affiche l'en-tete avec gradient card et tech badges."""
+    """Affiche l'en-tete minimal et elegant."""
     health = api_health()
     n_films = health.get("n_items", 0) if health else 0
     n_users = health.get("n_users", 0) if health else 0
     is_online = health and health.get("status") == "healthy"
     
-    # Main gradient header card with FontAwesome icons
+    status_class = "online" if is_online else "offline"
+    status_text = "En ligne" if is_online else "Hors ligne"
+    status_icon = "fa-circle" if is_online else "fa-exclamation-triangle"
+    
     st.markdown(f'''
-    <div class="main-header">
-        <h1 class="main-title"><i class="fas fa-film"></i> Systeme de Recommandation de Films</h1>
-        <p class="main-subtitle">Decouvrez vos prochains films preferes grace a l'intelligence artificielle</p>
-        <div class="tech-badges">
-            <span class="tech-badge"><i class="fas fa-brain"></i> Machine Learning</span>
-            <span class="tech-badge"><i class="fas fa-users"></i> Filtrage Collaboratif</span>
-            <span class="tech-badge"><i class="fas fa-bolt"></i> Temps Reel</span>
-            <span class="tech-badge"><i class="fas fa-database"></i> {n_films:,} Films</span>
-            <span class="tech-badge"><i class="fas fa-user-friends"></i> {n_users:,} Utilisateurs</span>
+    <div class="app-header">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-film"></i>
+                Recommandation Films
+            </h1>
+            <p class="header-tagline">Decouvrez des films adaptes a vos gouts</p>
+        </div>
+        <div class="header-meta">
+            <span class="status-badge {status_class}">
+                <i class="fas {status_icon}"></i>
+                {status_text}
+            </span>
+            <div class="header-stats">
+                <span class="header-stat">
+                    <i class="fas fa-database"></i>
+                    {n_films:,} films
+                </span>
+                <span class="header-stat">
+                    <i class="fas fa-users"></i>
+                    {n_users:,} profils
+                </span>
+            </div>
         </div>
     </div>
     ''', unsafe_allow_html=True)
-    
-    # Status indicator
-    if is_online:
-        st.markdown('''
-        <div class="status-online"><i class="fas fa-check-circle"></i> Systeme operationnel</div>
-        ''', unsafe_allow_html=True)
-    else:
-        st.markdown('''
-        <div class="status-offline"><i class="fas fa-exclamation-circle"></i> Service indisponible</div>
-        ''', unsafe_allow_html=True)
 
 
 def welcome_section() -> None:
     """Affiche un guide rapide pour les nouveaux utilisateurs."""
-    # Only show expander, don't modify session state to avoid reruns
     with st.expander("Comment utiliser cette application ?", expanded=False):
         st.markdown("""
         **Bienvenue !** Cette application vous aide a decouvrir des films adaptes a vos gouts.
         
-        | Onglet | Description |
-        |--------|-------------|
-        | **Recommandations** | Obtenez des suggestions personnalisees selon votre profil |
-        | **Decouvrir** | Trouvez des films similaires a ceux que vous aimez |
-        | **Historique** | Consultez les films que vous avez deja notes |
-        | **Statistiques** | Voyez les chiffres cles du systeme |
+        Vous explorez des **profils de demonstration**. Chaque profil represente un utilisateur avec des gouts differents.
         
-        *Selectionnez un onglet ci-dessous pour commencer.*
+        **Navigation :**
+        
+        - **Recommandations** : Obtenez des suggestions personnalisees selon un profil utilisateur
+        - **Decouvrir** : Trouvez des films similaires a ceux que vous aimez
+        - **Historique** : Consultez les films qu'un utilisateur a deja notes
+        - **Statistiques** : Voyez les chiffres cles du systeme
+        
+        *Selectionnez un onglet dans le menu pour commencer.*
         """)
 
 
@@ -188,7 +220,7 @@ def tab_recommendations() -> None:
     <div class="info-card">
         <i class="fas fa-lightbulb"></i>
         <div class="content">
-            <p>Notre algorithme analyse les preferences de votre profil pour vous suggerer des films que vous allez adorer.</p>
+            <p>Notre algorithme analyse les preferences du profil selectionne pour suggerer des films pertinents.</p>
         </div>
     </div>
     ''', unsafe_allow_html=True)
@@ -205,7 +237,7 @@ def tab_recommendations() -> None:
     
     with col1:
         user_id = st.selectbox(
-            "Selectionnez votre profil",
+            "Selectionnez un profil",
             users,
             format_func=lambda x: f"Utilisateur #{x}",
             help="Chaque profil represente un utilisateur avec un historique de notes unique",
@@ -226,19 +258,19 @@ def tab_recommendations() -> None:
         exclude = st.checkbox(
             "Exclure les films deja vus",
             value=True,
-            help="Cochez pour ne voir que des films que vous n'avez pas encore notes",
+            help="Cochez pour ne voir que des films pas encore notes",
             key="rec_exclude"
         )
-        st.caption("Par defaut, nous excluons les films de votre historique pour privilegier la decouverte.")
+        st.caption("Par defaut, nous excluons les films de l'historique pour privilegier la decouverte.")
     
-    # Get value from session state (checkbox already stores it)
+    # Get value from session state
     exclude = st.session_state.get("rec_exclude", True)
     
     st.markdown("")
     
-    if st.button("Obtenir mes recommandations", type="primary", use_container_width=True, key="rec_btn"):
+    if st.button("Obtenir les recommandations", type="primary", use_container_width=True, key="rec_btn"):
         progress_placeholder = st.empty()
-        progress_placeholder.info("Analyse de votre profil en cours...")
+        progress_placeholder.info("Analyse du profil en cours...")
         
         with st.spinner(""):
             data = api_recommend(user_id, k, exclude)
@@ -247,7 +279,7 @@ def tab_recommendations() -> None:
         
         if data and data.get("recommendations"):
             recs = data["recommendations"]
-            st.success(f"{len(recs)} films recommandes pour vous")
+            st.success(f"{len(recs)} films recommandes")
             
             for i in range(0, len(recs), 2):
                 cols = st.columns(2)
@@ -257,11 +289,14 @@ def tab_recommendations() -> None:
                         with col:
                             with st.container():
                                 title = rec.get("title") or f"Film #{rec['item_id']}"
+                                score = rec["score"]
+                                score_label = get_score_label(score)
+                                
                                 st.markdown(f"**{title}**")
                                 if rec.get("genres"):
                                     st.caption(rec.get("genres"))
-                                st.progress(min(rec["score"], 1.0))
-                                st.caption(f"Pertinence : {rec['score']:.1%}")
+                                st.progress(min(score, 1.0))
+                                st.caption(f"{score_label} ({score:.0%})")
         else:
             st.info("Aucune recommandation disponible pour ce profil.")
             st.caption("Essayez de decocher l'option 'Exclure les films deja vus' dans les options avancees.")
@@ -362,7 +397,7 @@ def tab_history() -> None:
     st.markdown('''
     <div class="section-header">
         <i class="fas fa-history"></i>
-        <h3>Votre Historique</h3>
+        <h3>Historique des Notes</h3>
     </div>
     ''', unsafe_allow_html=True)
     
@@ -370,7 +405,7 @@ def tab_history() -> None:
     <div class="info-card">
         <i class="fas fa-folder-open"></i>
         <div class="content">
-            <p>Consultez les films que vous avez deja notes. Ces donnees alimentent nos recommandations.</p>
+            <p>Consultez les films qu'un utilisateur a deja notes. Ces donnees alimentent nos recommandations.</p>
         </div>
     </div>
     ''', unsafe_allow_html=True)
@@ -481,11 +516,11 @@ def tab_stats() -> None:
             des recommandations personnalisees. Il analyse les historiques de notation 
             pour identifier des patterns et suggerer des films pertinents.
             
-            | Caracteristique | Description |
-            |-----------------|-------------|
-            | **Algorithme** | Filtrage collaboratif (Matrix Factorization) |
-            | **Mise a jour** | Modele re-entraine periodiquement |
-            | **Latence** | Recommandations en temps reel (<1s) |
+            **Caracteristiques :**
+            
+            - **Algorithme** : Filtrage collaboratif (Matrix Factorization)
+            - **Mise a jour** : Modele re-entraine periodiquement
+            - **Latence** : Recommandations en temps reel (< 1 seconde)
             """)
     else:
         st.error("Impossible de recuperer les statistiques du systeme.")
@@ -570,22 +605,6 @@ def main() -> None:
         
         st.markdown("---")
         
-        # About/Info Card
-        st.markdown('''
-        <div class="sidebar-info">
-            <div class="title"><i class="fas fa-info-circle"></i> A propos</div>
-            <p>Systeme de recommandation de films intelligent base sur l'IA.</p>
-            <ul class="feature-list">
-                <li><i class="fas fa-check"></i> Filtrage collaboratif</li>
-                <li><i class="fas fa-check"></i> Recommandations personnalisees</li>
-                <li><i class="fas fa-check"></i> Films similaires</li>
-                <li><i class="fas fa-check"></i> API temps reel</li>
-            </ul>
-        </div>
-        ''', unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
         # Status Indicators
         health = api_health()
         if health and health.get("status") == "healthy":
@@ -647,7 +666,7 @@ def main() -> None:
     elif st.session_state.current_tab == "Statistiques":
         tab_stats()
     
-    # Footer with project credits
+    # Footer
     st.markdown('''
     <div class="footer">
         <div class="footer-content">

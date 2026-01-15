@@ -461,26 +461,46 @@ def tab_history() -> None:
         
         if data and data.get("history"):
             hist = data["history"]
-            st.success(f"{data['count']} films dans l'historique")
             
-            df = pd.DataFrame([
-                {
-                    "Titre": h.get("title", f"Film #{h['item_id']}"),
-                    "Note": h.get("rating", 0),
-                }
-                for h in hist
-            ])
+            st.markdown(f'''<p style="color: #10b981; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+<i class="fas fa-check-circle"></i> {data['count']} films dans l'historique</p>''', unsafe_allow_html=True)
             
-            st.dataframe(
-                df,
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    "Note": st.column_config.NumberColumn(
-                        format="%.1f / 5.0",
-                    ),
-                },
-            )
+            # Display results in premium cards
+            for i in range(0, len(hist), 3):
+                cols = st.columns(3)
+                for j, col in enumerate(cols):
+                    if i + j < len(hist):
+                        h = hist[i + j]
+                        title = h.get("title", f"Film #{h['item_id']}")
+                        rating = h.get("rating", 0)
+                        
+                        # Generate stars display
+                        full_stars = int(rating)
+                        half_star = 1 if rating - full_stars >= 0.5 else 0
+                        empty_stars = 5 - full_stars - half_star
+                        stars_html = '<i class="fas fa-star" style="color: #fbbf24;"></i>' * full_stars
+                        if half_star:
+                            stars_html += '<i class="fas fa-star-half-alt" style="color: #fbbf24;"></i>'
+                        stars_html += '<i class="far fa-star" style="color: #475569;"></i>' * empty_stars
+                        
+                        # Color based on rating
+                        if rating >= 4:
+                            color = "#10b981"
+                        elif rating >= 3:
+                            color = "#8b5cf6"
+                        else:
+                            color = "#f59e0b"
+                        
+                        card_html = f'''<div style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; position: relative; overflow: hidden;">
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, {color}, transparent);"></div>
+<h4 style="margin: 0 0 0.75rem 0; font-size: 0.95rem; font-weight: 600; color: #f8fafc; line-height: 1.4;">{title}</h4>
+<div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+{stars_html}
+</div>
+<p style="margin: 0; font-size: 0.85rem; color: {color}; font-weight: 600;">{rating:.1f} / 5.0</p>
+</div>'''
+                        with col:
+                            st.markdown(card_html, unsafe_allow_html=True)
         else:
             st.info("Aucun film note pour ce profil.")
             st.caption("Cet utilisateur n'a pas encore evalue de films.")

@@ -34,10 +34,11 @@ features:
 # Configuration du modele
 model:
   type: popularity  # popularity, als, svd, implicit
-  embedding_dim: 64
+  embedding_dim: 128  # For future ALS if implicit library is installed
   regularization: 0.01
-  iterations: 15
-  alpha: 40  # Parametre de confiance pour feedback implicite
+  iterations: 25
+  alpha: 50  # Parametre de confiance pour feedback implicite
+  hybrid_weight: 0.7  # Weight for collaborative vs content-based
 
 # Configuration de l'entrainement
 train:

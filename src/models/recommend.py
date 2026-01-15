@@ -242,15 +242,30 @@ class Recommender:
         # Generer les recommandations
         try:
             if exclude_seen and self.train_matrix is not None:
-                item_indices, scores = self.model.recommend(
-                    user_idx,
-                    n=n,
-                    interaction_matrix=self.train_matrix,
-                )
+                # Try to pass item_features for hybrid scoring
+                try:
+                    item_indices, scores = self.model.recommend(
+                        user_idx,
+                        n=n,
+                        filter_items=set(self.train_matrix[user_idx].indices),
+                        item_features=self.item_features,
+                    )
+                except TypeError:
+                    # Fallback if model doesn't accept item_features
+                    item_indices, scores = self.model.recommend(
+                        user_idx,
+                        n=n,
+                        filter_items=set(self.train_matrix[user_idx].indices),
+                    )
             else:
-                item_indices, scores = self.model.recommend(user_idx, n=n)
+                try:
+                    item_indices, scores = self.model.recommend(
+                        user_idx, n=n, item_features=self.item_features
+                    )
+                except TypeError:
+                    item_indices, scores = self.model.recommend(user_idx, n=n)
         except TypeError:
-            # Fallback si le modele ne supporte pas interaction_matrix
+            # Fallback si le modele ne supporte pas filter_items
             seen_items = set(self.train_matrix[user_idx].indices) if exclude_seen else set()
             item_indices, scores = self.model.recommend(
                 user_idx, n=n, filter_items=seen_items

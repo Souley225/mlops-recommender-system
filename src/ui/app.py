@@ -149,24 +149,24 @@ def get_score_icon(score: float) -> str:
 # =============================================================================
 
 def header() -> None:
-    """Affiche l'en-tete minimal et elegant."""
+    """Affiche l'en-tete premium et elegant pour executives."""
     health = api_health()
     n_films = health.get("n_items", 0) if health else 0
     n_users = health.get("n_users", 0) if health else 0
     is_online = health and health.get("status") == "healthy"
     
     status_class = "online" if is_online else "offline"
-    status_text = "En ligne" if is_online else "Hors ligne"
-    status_icon = "fa-circle" if is_online else "fa-exclamation-triangle"
+    status_text = "Systeme Actif" if is_online else "Hors ligne"
+    status_icon = "fa-circle-check" if is_online else "fa-triangle-exclamation"
     
     st.markdown(f'''
     <div class="app-header">
         <div class="header-content">
             <h1 class="header-title">
-                <i class="fas fa-film"></i>
-                Recommandation Films
+                <i class="fas fa-clapperboard"></i>
+                CineMatch Pro
             </h1>
-            <p class="header-tagline">Decouvrez des films adaptes a vos gouts</p>
+            <p class="header-tagline">Plateforme de Recommandation Intelligente propulsee par l'IA</p>
         </div>
         <div class="header-meta">
             <span class="status-badge {status_class}">
@@ -175,12 +175,12 @@ def header() -> None:
             </span>
             <div class="header-stats">
                 <span class="header-stat">
-                    <i class="fas fa-database"></i>
-                    {n_films:,} films
+                    <i class="fas fa-film"></i>
+                    {n_films:,} Films
                 </span>
                 <span class="header-stat">
-                    <i class="fas fa-users"></i>
-                    {n_users:,} profils
+                    <i class="fas fa-user-group"></i>
+                    {n_users:,} Utilisateurs
                 </span>
             </div>
         </div>
@@ -364,29 +364,54 @@ def tab_discover() -> None:
         
         if data and data.get("similar_items"):
             sims = data["similar_items"]
-            st.success(f"{len(sims)} films similaires trouves")
             
-            df = pd.DataFrame([
-                {
-                    "Titre": s.get("title", f"Film #{s['item_id']}"),
-                    "Genre": s.get("genres", "-"),
-                    "Similarite": s["similarity"],
-                }
-                for s in sims
-            ])
+            # Reference film info
+            ref_title = item_options.get(item_id, f"Film #{item_id}")
+            st.markdown(f'''<div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(37, 99, 235, 0.1) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+<i class="fas fa-film" style="font-size: 1.5rem; background: linear-gradient(135deg, #8b5cf6, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+<div><p style="margin: 0; font-size: 0.8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">Film de Reference</p>
+<p style="margin: 0; font-size: 1.1rem; font-weight: 600; color: #f8fafc;">{ref_title}</p></div></div>''', unsafe_allow_html=True)
             
-            st.dataframe(
-                df,
-                use_container_width=True,
-                hide_index=True,
-                column_config={
-                    "Similarite": st.column_config.ProgressColumn(
-                        format="%.0f%%",
-                        min_value=0,
-                        max_value=1,
-                    ),
-                },
-            )
+            st.markdown(f'''<p style="color: #10b981; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+<i class="fas fa-check-circle"></i> {len(sims)} films similaires trouves</p>''', unsafe_allow_html=True)
+            
+            # Display results in premium cards
+            for i in range(0, len(sims), 2):
+                cols = st.columns(2)
+                for j, col in enumerate(cols):
+                    if i + j < len(sims):
+                        sim = sims[i + j]
+                        title = sim.get("title", f"Film #{sim['item_id']}")
+                        genres = sim.get("genres", "Genre non specifie")
+                        similarity = sim["similarity"]
+                        similarity_pct = int(similarity * 100)
+                        
+                        # Determine color based on similarity
+                        if similarity >= 0.8:
+                            color = "#10b981"
+                            label = "Tres similaire"
+                        elif similarity >= 0.6:
+                            color = "#8b5cf6"
+                            label = "Similaire"
+                        else:
+                            color = "#3b82f6"
+                            label = "A explorer"
+                        
+                        card_html = f'''<div style="background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1rem; position: relative; overflow: hidden;">
+<div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, {color}, transparent);"></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
+<h4 style="margin: 0; font-size: 1rem; font-weight: 600; color: #f8fafc; line-height: 1.4;">{title}</h4>
+<span style="background: {color}20; color: {color}; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.7rem; font-weight: 600; white-space: nowrap;">{similarity_pct}%</span>
+</div>
+<p style="margin: 0 0 1rem 0; font-size: 0.85rem; color: #94a3b8; display: flex; align-items: center; gap: 0.5rem;">
+<i class="fas fa-tags" style="font-size: 0.75rem;"></i> {genres}</p>
+<div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 0.5rem;">
+<div style="width: {similarity_pct}%; height: 100%; background: linear-gradient(90deg, {color}, {color}80); border-radius: 10px; box-shadow: 0 0 10px {color}40;"></div>
+</div>
+<p style="margin: 0; font-size: 0.75rem; color: {color}; font-weight: 500;">{label}</p>
+</div>'''
+                        with col:
+                            st.markdown(card_html, unsafe_allow_html=True)
         else:
             st.info("Aucun film similaire trouve pour cette selection.")
             st.caption("Essayez de selectionner un autre film de reference.")
@@ -574,8 +599,8 @@ def main() -> None:
     with st.sidebar:
         st.markdown('''
         <div class="sidebar-brand">
-            <i class="fas fa-film"></i>
-            <span>Recommandation Films</span>
+            <i class="fas fa-clapperboard"></i>
+            <span>CineMatch Pro</span>
         </div>
         ''', unsafe_allow_html=True)
         
@@ -671,16 +696,17 @@ def main() -> None:
     <div class="footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <h4><i class="fas fa-film"></i> Systeme de Recommandation de Films</h4>
-                <p>Moteur de recommandation intelligent propulse par le Machine Learning</p>
+                <h4><i class="fas fa-clapperboard"></i> CineMatch Pro</h4>
+                <p>Plateforme de Recommandation Intelligente propulsee par l'IA et le Machine Learning</p>
             </div>
             <div class="footer-tech">
-                <p class="footer-label"><i class="fas fa-code"></i> Stack Technique</p>
+                <p class="footer-label"><i class="fas fa-microchip"></i> Technologies</p>
                 <div class="footer-badges">
                     <span class="footer-badge"><i class="fab fa-python"></i> Python</span>
                     <span class="footer-badge"><i class="fas fa-bolt"></i> FastAPI</span>
                     <span class="footer-badge"><i class="fas fa-chart-bar"></i> Streamlit</span>
-                    <span class="footer-badge"><i class="fas fa-brain"></i> Scikit-learn</span>
+                    <span class="footer-badge"><i class="fas fa-brain"></i> ML/AI</span>
+                    <span class="footer-badge"><i class="fas fa-database"></i> MLOps</span>
                 </div>
             </div>
             <div class="social-links">
@@ -689,9 +715,9 @@ def main() -> None:
                 <a href="mailto:sallsouleymane2207@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
             </div>
             <a href="https://github.com/Souley225/mlops-recommender-system" target="_blank" class="source-code-link">
-                <i class="fas fa-code-branch"></i> Code Source
+                <i class="fas fa-code-branch"></i> Voir le Code Source
             </a>
-            <p class="footer-license"><i class="fas fa-balance-scale"></i> MIT License - 2026</p>
+            <p class="footer-license"><i class="fas fa-shield-halved"></i> Enterprise Edition - 2026</p>
         </div>
     </div>
     ''', unsafe_allow_html=True)

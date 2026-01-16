@@ -36,11 +36,13 @@ class PopularityModel:
         item_features: Optional[np.ndarray] = None,
     ) -> Optional[np.ndarray]:
         """Compute user's genre preferences based on highly-rated items."""
-        if item_features is None or self._train_matrix is None:
+        # Backward compatibility: check for _train_matrix attribute
+        train_matrix = getattr(self, '_train_matrix', None)
+        if item_features is None or train_matrix is None:
             return None
         
         # Get items the user has interacted with and their ratings
-        user_ratings = self._train_matrix[user_idx].toarray().flatten()
+        user_ratings = train_matrix[user_idx].toarray().flatten()
         rated_items = np.where(user_ratings > 0)[0]
         
         if len(rated_items) == 0:

@@ -5,6 +5,8 @@
 [![Demo](https://img.shields.io/badge/Demo-Live-success?style=flat-square)](https://mlops-recommender-ui.onrender.com)
 [![API](https://img.shields.io/badge/API-Docs-blue?style=flat-square)](https://mlops-recommender-system-1.onrender.com/docs)
 [![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![MLflow](https://img.shields.io/badge/MLflow-Tracking-0194E2?style=flat-square&logo=mlflow&logoColor=white)](https://mlflow.org)
+[![DVC](https://img.shields.io/badge/DVC-Pipeline-945DD6?style=flat-square&logo=dvc&logoColor=white)](https://dvc.org)
 
 ---
 
@@ -24,72 +26,232 @@ Comparable aux systèmes utilisés par Netflix ou Amazon : le système apprend d
 
 ---
 
-## Fonctionnalités
+## Architecture Système
 
-| Fonctionnalité | Description |
-|----------------|-------------|
-| Recommandations personnalisées | Suggestions adaptées à chaque utilisateur |
-| Films similaires | Trouver des films qui ressemblent aux favoris |
-| Interface intuitive | Application web simple à utiliser |
-| API REST | Intégration facile dans d'autres applications |
+```mermaid
+flowchart TB
+    subgraph Data["Data Layer"]
+        ML[(MovieLens<br/>Dataset)]
+        DVC[DVC<br/>Versioning]
+    end
+    
+    subgraph Training["Training Pipeline"]
+        ETL[ETL<br/>Processing]
+        FE[Feature<br/>Engineering]
+        TRAIN[Model<br/>Training]
+        EVAL[Evaluation]
+        REG[Model<br/>Registry]
+    end
+    
+    subgraph Tracking["Experiment Tracking"]
+        MLF[MLflow<br/>Server]
+    end
+    
+    subgraph Serving["Serving Layer"]
+        API[FastAPI<br/>REST API]
+        UI[Streamlit<br/>Interface]
+    end
+    
+    subgraph Deploy["Deployment"]
+        DOCKER[Docker<br/>Containers]
+        RENDER[Render<br/>Cloud]
+    end
+    
+    ML --> DVC
+    DVC --> ETL
+    ETL --> FE
+    FE --> TRAIN
+    TRAIN --> EVAL
+    EVAL --> REG
+    TRAIN -.-> MLF
+    EVAL -.-> MLF
+    REG --> API
+    API --> UI
+    API --> DOCKER
+    UI --> DOCKER
+    DOCKER --> RENDER
+```
 
 ---
 
-## Démonstration
+## Pipeline MLOps
 
-### Interface utilisateur
+Le projet utilise **DVC** pour orchestrer un pipeline reproductible en 6 étapes :
 
-L'application Streamlit permet de :
-- Sélectionner un profil utilisateur
-- Obtenir des recommandations personnalisées
-- Explorer des films similaires
-- Consulter l'historique des interactions
+```mermaid
+flowchart LR
+    subgraph S1["1. Download"]
+        D1[download_data]
+    end
+    
+    subgraph S2["2. Transform"]
+        D2[make_dataset]
+    end
+    
+    subgraph S3["3. Split"]
+        D3[split_dataset]
+    end
+    
+    subgraph S4["4. Features"]
+        D4[build_features]
+    end
+    
+    subgraph S5["5. Train"]
+        D5[train]
+    end
+    
+    subgraph S6["6. Evaluate"]
+        D6[evaluate]
+        D7[register]
+    end
+    
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6
+```
 
-**Accès :** [mlops-recommender-ui.onrender.com](https://mlops-recommender-ui.onrender.com)
+### Détail des étapes
 
-### API REST
+| Étape | Module | Entrées | Sorties | Description |
+|-------|--------|---------|---------|-------------|
+| **download_data** | `src.data.download_data` | URL Kaggle | `data/raw/` | Téléchargement MovieLens depuis Kaggle |
+| **make_dataset** | `src.data.make_dataset` | Fichiers bruts | `interactions.parquet`, `movies.parquet` | Nettoyage et transformation des données |
+| **split_dataset** | `src.data.split_dataset` | Interactions | Train/Val/Test + Encoders | Split temporel avec encodage utilisateurs/items |
+| **build_features** | `src.features.build_features` | Splits | Matrices sparses + Popularité | Construction des matrices d'interaction CSR |
+| **train** | `src.models.train` | Matrices | `model.joblib` | Entraînement du modèle (Popularity/ALS) |
+| **evaluate** | `src.models.evaluate` | Modèle + Test | Métriques JSON | Évaluation Precision@K, Recall@K, NDCG, MRR |
+| **register** | `src.models.register` | Modèle + Métriques | Model Registry | Enregistrement du modèle en Production |
 
-Documentation interactive Swagger disponible.
+### Exécution du pipeline
 
-**Accès :** [mlops-recommender-system-1.onrender.com/docs](https://mlops-recommender-system-1.onrender.com/docs)
+```bash
+# Pipeline complet
+dvc repro
+
+# Étape spécifique
+dvc repro train
+
+# Visualiser le DAG
+dvc dag
+```
 
 ---
 
-## Stack technique
+## Modèles de Recommandation
+
+### Popularity Baseline avec Personnalisation Hybride
+
+Le modèle principal combine **popularité globale** et **préférences utilisateur par genre** :
+
+```mermaid
+flowchart LR
+    subgraph Input["Entrées"]
+        POP[Scores<br/>Popularité]
+        PREF[Préférences<br/>Genre User]
+        FEAT[Features<br/>Genre Items]
+    end
+    
+    subgraph Hybrid["Scoring Hybride"]
+        CALC["Score = 0.6 × Popularité<br/>+ 0.4 × Similarité Genre"]
+    end
+    
+    subgraph Output["Sortie"]
+        REC[Top-K<br/>Recommandations]
+    end
+    
+    POP --> CALC
+    PREF --> CALC
+    FEAT --> CALC
+    CALC --> REC
+```
+
+**Avantages :**
+- Cold-start résolu par la popularité
+- Personnalisation via les genres préférés de l'utilisateur
+- Pas de latence de calcul (scores pré-calculés)
+
+### ALS (Alternating Least Squares)
+
+Modèle de **factorisation matricielle** pour feedback implicite :
+
+| Paramètre | Valeur | Description |
+|-----------|--------|-------------|
+| `factors` | 64 | Dimension des embeddings |
+| `regularization` | 0.01 | Régularisation L2 |
+| `iterations` | 15 | Itérations d'optimisation |
+| `alpha` | 40.0 | Confiance pour feedback implicite |
+
+---
+
+## Métriques d'Évaluation
+
+| Métrique | Valeur | Description |
+|----------|--------|-------------|
+| **Precision@5** | 0.133 | Proportion de recommandations pertinentes |
+| **Recall@5** | 0.037 | Proportion d'items pertinents retrouvés |
+| **NDCG@5** | 0.146 | Qualité du ranking (gain cumulé) |
+| **MRR** | 0.213 | Rang moyen de la première recommandation pertinente |
+
+---
+
+## Stack Technique
 
 | Domaine | Technologies |
 |---------|-------------|
-| Data Science | Python, Pandas, Scikit-learn |
-| Machine Learning | Filtrage collaboratif, ALS |
-| API | FastAPI, Pydantic |
-| Frontend | Streamlit |
-| DevOps | Docker, CI/CD |
-| Cloud | Render |
-| MLOps | MLflow, DVC |
+| **Data Processing** | Pandas, NumPy, SciPy (sparse matrices) |
+| **ML/Recommandation** | Implicit (ALS), Scikit-learn |
+| **Tracking** | MLflow, DVC |
+| **API** | FastAPI, Pydantic, Uvicorn |
+| **Frontend** | Streamlit |
+| **Containerisation** | Docker, Docker Compose |
+| **CI/CD** | GitHub Actions |
+| **Cloud** | Render |
 
 ---
 
 ## Données
 
-Jeu de données **MovieLens** :
-- ~100 000 évaluations
-- ~600 utilisateurs
-- ~10 000 films
+Jeu de données **MovieLens Small** :
+
+| Statistique | Valeur |
+|-------------|--------|
+| Évaluations | ~100,000 |
+| Utilisateurs | ~600 |
+| Films | ~10,000 |
+| Densité | ~1.7% |
 
 ---
 
-## Fonctionnement
+## Structure du Projet
 
-### Pipeline
-
-1. **Collecte** : Récupération des notes données par les utilisateurs
-2. **Analyse** : Détection de patterns comportementaux
-3. **Prédiction** : Estimation des films non vus que l'utilisateur aimerait
-4. **Recommandation** : Affichage des meilleures prédictions
-
-### Filtrage Collaboratif
-
-Le système analyse les **comportements utilisateurs similaires** plutôt que le contenu des films. Si deux utilisateurs ont aimé les mêmes films, leurs autres préférences sont probablement similaires.
+```
+mlops-recommender-system/
+├── src/
+│   ├── data/                 # ETL : download, make_dataset, split
+│   ├── features/             # Feature engineering
+│   ├── models/               # Train, evaluate, recommend, register
+│   │   ├── train.py          # Entraînement avec Optuna
+│   │   ├── evaluate.py       # Métriques ranking
+│   │   ├── recommend.py      # Classe Recommender
+│   │   └── model_classes.py  # PopularityModel, ALSModel
+│   ├── serving/              # API FastAPI
+│   │   └── api.py            # Endpoints REST
+│   ├── ui/                   # Interface Streamlit
+│   │   └── app.py            # Application web
+│   └── utils/                # Utilitaires (logging, I/O)
+├── configs/                  # Configuration YAML (Hydra)
+├── data/
+│   ├── raw/                  # Données brutes (gitignored)
+│   ├── interim/              # Données intermédiaires
+│   └── processed/            # Features prêtes pour le modèle
+├── models/                   # Modèles entraînés (.joblib)
+├── docker/                   # Dockerfiles (API, UI, Train)
+├── tests/                    # Tests unitaires pytest
+├── dvc.yaml                  # Pipeline DVC
+├── params.yaml               # Hyperparamètres
+├── compose.yaml              # Docker Compose local
+├── Dockerfile                # Image API (Render)
+├── Dockerfile.ui             # Image UI (Render)
+└── render.yaml               # Configuration Render
+```
 
 ---
 
@@ -100,9 +262,12 @@ Le système analyse les **comportements utilisateurs similaires** plutôt que le
 git clone https://github.com/Souley225/mlops-recommender-system.git
 cd mlops-recommender-system
 
-# Installation
+# Installation des dépendances
 pip install poetry
 poetry install
+
+# Exécuter le pipeline complet
+dvc repro
 
 # Lancer l'API
 poetry run uvicorn src.serving.api:app --host 0.0.0.0 --port 8000
@@ -111,20 +276,31 @@ poetry run uvicorn src.serving.api:app --host 0.0.0.0 --port 8000
 poetry run streamlit run src/ui/app.py
 ```
 
+### Docker Compose
+
+```bash
+# Démarrer tous les services
+docker compose up -d
+
+# Services disponibles :
+# - API      : http://localhost:8000
+# - UI       : http://localhost:8501
+# - MLflow   : http://localhost:5000
+```
+
 ---
 
-## Structure
+## API Endpoints
 
-```
-mlops-recommender-system/
-├── src/
-│   ├── models/      # Algorithmes de recommandation
-│   ├── serving/     # API REST
-│   └── ui/          # Interface Streamlit
-├── data/            # Données MovieLens
-├── models/          # Modèles entraînés
-└── docker/          # Configuration Docker
-```
+| Méthode | Endpoint | Description |
+|---------|----------|-------------|
+| `GET` | `/health` | Health check |
+| `GET` | `/users` | Liste des utilisateurs |
+| `GET` | `/recommend/{user_id}` | Recommandations personnalisées |
+| `GET` | `/similar/{movie_id}` | Films similaires |
+| `GET` | `/movies/{movie_id}` | Détails d'un film |
+
+Documentation Swagger : [/docs](https://mlops-recommender-system-1.onrender.com/docs)
 
 ---
 
@@ -133,6 +309,7 @@ mlops-recommender-system/
 **Souleymane SALL** - Data Scientist / ML Engineer
 
 [![GitHub](https://img.shields.io/badge/GitHub-Souley225-181717?style=flat-square&logo=github)](https://github.com/Souley225)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/souleymanesall)
 
 ---
 

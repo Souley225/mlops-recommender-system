@@ -309,7 +309,7 @@ Documentation Swagger : [/docs](https://mlops-recommender-system-1.onrender.com/
 **Souleymane SALL** - Data Scientist / ML Engineer
 
 [![GitHub](https://img.shields.io/badge/GitHub-Souley225-181717?style=flat-square&logo=github)](https://github.com/Souley225)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/souleymanesall)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/souleymanessall)
 
 ---
 

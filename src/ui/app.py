@@ -606,22 +606,50 @@ def main() -> None:
     
     health = api_health()
     if not health or health.get("status") != "healthy":
-        st.error("Le service de recommandation n'est pas disponible.")
+        # Show error with inline styles in case CSS doesn't load
+        st.markdown("""
+        <style>
+            .loading-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 60vh;
+                text-align: center;
+                padding: 2rem;
+            }
+            .loading-icon {
+                font-size: 4rem;
+                color: #f59e0b;
+                margin-bottom: 1rem;
+            }
+            .loading-title {
+                font-size: 1.5rem;
+                color: #f8fafc;
+                margin-bottom: 0.5rem;
+            }
+            .loading-message {
+                color: #94a3b8;
+                margin-bottom: 2rem;
+            }
+        </style>
+        <div class="loading-container">
+            <div class="loading-icon">⏳</div>
+            <h2 class="loading-title">Chargement du service...</h2>
+            <p class="loading-message">Le moteur de recommandation démarre. Veuillez patienter quelques instants.</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        with st.expander("Que faire ?", expanded=True):
-            st.markdown(f"""
-            **Causes possibles :**
-            - Le serveur API n'est pas demarre
-            - Probleme de connexion reseau
-            - Le service est en cours de redemarrage
-            
-            **Actions suggerees :**
-            1. Verifiez que l'API est accessible sur `{API_URL}`
-            2. Attendez quelques instants et rechargez la page
-            3. Contactez l'administrateur si le probleme persiste
-            """)
+        # Auto-refresh after 5 seconds
+        st.markdown("""
+        <script>
+            setTimeout(function(){
+                window.location.reload();
+            }, 5000);
+        </script>
+        """, unsafe_allow_html=True)
         
-        if st.button("Reessayer maintenant", type="primary"):
+        if st.button("🔄 Actualiser maintenant", type="primary", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
         return

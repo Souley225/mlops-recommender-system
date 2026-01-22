@@ -166,7 +166,27 @@ def header() -> None:
                 <i class="fas fa-clapperboard"></i>
                 CineMatch Pro
             </h1>
-            <p class="header-tagline">Plateforme de Recommandation Intelligente propulsee par l'IA</p>
+            <p class="header-tagline">Systeme de Recommandation MLOps de bout en bout</p>
+            <div class="project-description">
+                <p class="project-context">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Projet Portfolio</strong> — Un moteur de recommandation de films pret pour la production, illustrant les pratiques modernes de Data Science et MLOps.
+                </p>
+                <div class="project-highlights">
+                    <div class="highlight-item">
+                        <i class="fas fa-robot"></i>
+                        <span><strong>Intelligence Artificielle :</strong> Recommandations personnalisees via algorithmes de filtrage collaboratif</span>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-cogs"></i>
+                        <span><strong>Pipeline Complet :</strong> Ingestion de donnees, entrainement de modeles, versioning, API REST et monitoring</span>
+                    </div>
+                    <div class="highlight-item">
+                        <i class="fas fa-layer-group"></i>
+                        <span><strong>Stack Technique :</strong> Python, FastAPI, Streamlit, MLflow, DVC, Docker, Poetry</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="header-meta">
             <span class="status-badge {status_class}">

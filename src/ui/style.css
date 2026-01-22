@@ -434,6 +434,90 @@ small,
     font-size: 0.85rem;
 }
 
+/* Project Description - Portfolio Showcase */
+.project-description {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--glass-border);
+}
+
+.project-context {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-4) 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.project-context i {
+    color: var(--accent);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.project-context strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.project-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    padding: var(--space-2) 0;
+}
+
+.highlight-item i {
+    color: var(--primary);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 16px;
+}
+
+.highlight-item span {
+    flex: 1;
+}
+
+.highlight-item strong {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+/* Mobile responsive adjustments for project description */
+@media (max-width: 768px) {
+    .project-description {
+        margin-top: var(--space-4);
+        padding-top: var(--space-3);
+    }
+    
+    .project-context {
+        font-size: 0.85rem;
+    }
+    
+    .highlight-item {
+        font-size: 0.8rem;
+        padding: var(--space-1) 0;
+    }
+    
+    .highlight-item i {
+        font-size: 0.75rem;
+        width: 14px;
+    }
+}
+
 /* =============================================================================
    Section Headers - Refined Elegance
    ============================================================================= */

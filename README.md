@@ -1,3 +1,13 @@
+---
+title: CineMatch Pro
+emoji: 🎬
+colorFrom: purple
+colorTo: blue
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # Système de Recommandation de Films
 
 > Découvrez vos prochains films préférés grâce à l'intelligence artificielle

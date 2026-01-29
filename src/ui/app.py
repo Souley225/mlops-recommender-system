@@ -19,8 +19,8 @@ import streamlit as st
 # =============================================================================
 
 st.set_page_config(
-    page_title="Recommandation Films",
-    page_icon="",
+    page_title="Systeme de Recommandation de Films",
+    page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -164,29 +164,10 @@ def header() -> None:
         <div class="header-content">
             <h1 class="header-title">
                 <i class="fas fa-clapperboard"></i>
-                CineMatch Pro
+                Systeme de Recommandation de Films
             </h1>
-            <p class="header-tagline">Systeme de Recommandation MLOps de bout en bout</p>
-            <div class="project-description">
-                <p class="project-context">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Projet Portfolio</strong> — Un moteur de recommandation de films pret pour la production, illustrant les pratiques modernes de Data Science et MLOps.
-                </p>
-                <div class="project-highlights">
-                    <div class="highlight-item">
-                        <i class="fas fa-robot"></i>
-                        <span><strong>Intelligence Artificielle :</strong> Recommandations personnalisees via algorithmes de filtrage collaboratif</span>
-                    </div>
-                    <div class="highlight-item">
-                        <i class="fas fa-cogs"></i>
-                        <span><strong>Pipeline Complet :</strong> Ingestion de donnees, entrainement de modeles, versioning, API REST et monitoring</span>
-                    </div>
-                    <div class="highlight-item">
-                        <i class="fas fa-layer-group"></i>
-                        <span><strong>Stack Technique :</strong> Python, FastAPI, Streamlit, MLflow, DVC, Docker, Poetry</span>
-                    </div>
-                </div>
-            </div>
+            <p class="header-tagline">Moteur de recommandation intelligent propulse par le Machine Learning</p>
+            <p class="header-tech">Python • FastAPI • MLflow • DVC • Docker</p>
         </div>
         <div class="header-meta">
             <span class="status-badge {status_class}">
@@ -668,7 +649,7 @@ def main() -> None:
         st.markdown('''
         <div class="sidebar-brand">
             <i class="fas fa-clapperboard"></i>
-            <span>CineMatch Pro</span>
+            <span>Recommandation Films</span>
         </div>
         ''', unsafe_allow_html=True)
         
@@ -764,17 +745,17 @@ def main() -> None:
     <div class="footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <h4><i class="fas fa-clapperboard"></i> CineMatch Pro</h4>
-                <p>Plateforme de Recommandation Intelligente propulsee par l'IA et le Machine Learning</p>
+                <h4><i class="fas fa-clapperboard"></i> Systeme de Recommandation</h4>
+                <p>Projet MLOps complet — Du pipeline de donnees au deploiement en production</p>
             </div>
             <div class="footer-tech">
                 <p class="footer-label"><i class="fas fa-microchip"></i> Technologies</p>
                 <div class="footer-badges">
                     <span class="footer-badge"><i class="fab fa-python"></i> Python</span>
                     <span class="footer-badge"><i class="fas fa-bolt"></i> FastAPI</span>
-                    <span class="footer-badge"><i class="fas fa-chart-bar"></i> Streamlit</span>
-                    <span class="footer-badge"><i class="fas fa-brain"></i> ML/AI</span>
-                    <span class="footer-badge"><i class="fas fa-database"></i> MLOps</span>
+                    <span class="footer-badge"><i class="fas fa-flask"></i> MLflow</span>
+                    <span class="footer-badge"><i class="fas fa-code-branch"></i> DVC</span>
+                    <span class="footer-badge"><i class="fab fa-docker"></i> Docker</span>
                 </div>
             </div>
             <div class="social-links">
@@ -785,7 +766,7 @@ def main() -> None:
             <a href="https://github.com/Souley225/mlops-recommender-system" target="_blank" class="source-code-link">
                 <i class="fas fa-code-branch"></i> Voir le Code Source
             </a>
-            <p class="footer-license"><i class="fas fa-shield-halved"></i> Enterprise Edition - 2026</p>
+            <p class="footer-license"><i class="fas fa-copyright"></i> Souleymane SALL - 2026</p>
         </div>
     </div>
     ''', unsafe_allow_html=True)

@@ -19,8 +19,8 @@ import streamlit as st
 # =============================================================================
 
 st.set_page_config(
-    page_title="Recommandation Films",
-    page_icon="",
+    page_title="Systeme de Recommandation de Films",
+    page_icon="🎬",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -164,9 +164,10 @@ def header() -> None:
         <div class="header-content">
             <h1 class="header-title">
                 <i class="fas fa-clapperboard"></i>
-                CineMatch Pro
+                Systeme de Recommandation de Films
             </h1>
-            <p class="header-tagline">Plateforme de Recommandation Intelligente propulsee par l'IA</p>
+            <p class="header-tagline">Moteur de recommandation intelligent propulse par le Machine Learning</p>
+            <p class="header-tech">Python • FastAPI • MLflow • DVC • Docker</p>
         </div>
         <div class="header-meta">
             <span class="status-badge {status_class}">
@@ -586,22 +587,50 @@ def main() -> None:
     
     health = api_health()
     if not health or health.get("status") != "healthy":
-        st.error("Le service de recommandation n'est pas disponible.")
+        # Show error with inline styles in case CSS doesn't load
+        st.markdown("""
+        <style>
+            .loading-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 60vh;
+                text-align: center;
+                padding: 2rem;
+            }
+            .loading-icon {
+                font-size: 4rem;
+                color: #f59e0b;
+                margin-bottom: 1rem;
+            }
+            .loading-title {
+                font-size: 1.5rem;
+                color: #f8fafc;
+                margin-bottom: 0.5rem;
+            }
+            .loading-message {
+                color: #94a3b8;
+                margin-bottom: 2rem;
+            }
+        </style>
+        <div class="loading-container">
+            <div class="loading-icon">⏳</div>
+            <h2 class="loading-title">Chargement du service...</h2>
+            <p class="loading-message">Le moteur de recommandation démarre. Veuillez patienter quelques instants.</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        with st.expander("Que faire ?", expanded=True):
-            st.markdown(f"""
-            **Causes possibles :**
-            - Le serveur API n'est pas demarre
-            - Probleme de connexion reseau
-            - Le service est en cours de redemarrage
-            
-            **Actions suggerees :**
-            1. Verifiez que l'API est accessible sur `{API_URL}`
-            2. Attendez quelques instants et rechargez la page
-            3. Contactez l'administrateur si le probleme persiste
-            """)
+        # Auto-refresh after 5 seconds
+        st.markdown("""
+        <script>
+            setTimeout(function(){
+                window.location.reload();
+            }, 5000);
+        </script>
+        """, unsafe_allow_html=True)
         
-        if st.button("Reessayer maintenant", type="primary"):
+        if st.button("🔄 Actualiser maintenant", type="primary", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
         return
@@ -620,7 +649,7 @@ def main() -> None:
         st.markdown('''
         <div class="sidebar-brand">
             <i class="fas fa-clapperboard"></i>
-            <span>CineMatch Pro</span>
+            <span>Recommandation Films</span>
         </div>
         ''', unsafe_allow_html=True)
         
@@ -716,17 +745,17 @@ def main() -> None:
     <div class="footer">
         <div class="footer-content">
             <div class="footer-brand">
-                <h4><i class="fas fa-clapperboard"></i> CineMatch Pro</h4>
-                <p>Plateforme de Recommandation Intelligente propulsee par l'IA et le Machine Learning</p>
+                <h4><i class="fas fa-clapperboard"></i> Systeme de Recommandation</h4>
+                <p>Projet MLOps complet — Du pipeline de donnees au deploiement en production</p>
             </div>
             <div class="footer-tech">
                 <p class="footer-label"><i class="fas fa-microchip"></i> Technologies</p>
                 <div class="footer-badges">
                     <span class="footer-badge"><i class="fab fa-python"></i> Python</span>
                     <span class="footer-badge"><i class="fas fa-bolt"></i> FastAPI</span>
-                    <span class="footer-badge"><i class="fas fa-chart-bar"></i> Streamlit</span>
-                    <span class="footer-badge"><i class="fas fa-brain"></i> ML/AI</span>
-                    <span class="footer-badge"><i class="fas fa-database"></i> MLOps</span>
+                    <span class="footer-badge"><i class="fas fa-flask"></i> MLflow</span>
+                    <span class="footer-badge"><i class="fas fa-code-branch"></i> DVC</span>
+                    <span class="footer-badge"><i class="fab fa-docker"></i> Docker</span>
                 </div>
             </div>
             <div class="social-links">
@@ -737,7 +766,7 @@ def main() -> None:
             <a href="https://github.com/Souley225/mlops-recommender-system" target="_blank" class="source-code-link">
                 <i class="fas fa-code-branch"></i> Voir le Code Source
             </a>
-            <p class="footer-license"><i class="fas fa-shield-halved"></i> Enterprise Edition - 2026</p>
+            <p class="footer-license"><i class="fas fa-copyright"></i> Souleymane SALL - 2026</p>
         </div>
     </div>
     ''', unsafe_allow_html=True)

@@ -34,7 +34,6 @@ flowchart TB
         ML[(MovieLens Dataset)]
         DVC[DVC Versioning]
     end
-
     subgraph Training["Training Pipeline"]
         ETL[ETL Processing]
         FE[Feature Engineering]
@@ -42,21 +41,17 @@ flowchart TB
         EVAL[Evaluation]
         REG[Model Registry]
     end
-
     subgraph Tracking["Experiment Tracking"]
         MLF[MLflow Server]
     end
-
     subgraph Serving["Serving Layer"]
         API[FastAPI REST API]
         UI[Streamlit Interface]
     end
-
     subgraph Deploy["Deployment"]
         DOCKER[Docker Containers]
         RENDER[Render Cloud]
     end
-
     ML --> DVC
     DVC --> ETL
     ETL --> FE
@@ -83,28 +78,22 @@ flowchart LR
     subgraph S1["1. Download"]
         D1[download_data]
     end
-
     subgraph S2["2. Transform"]
         D2[make_dataset]
     end
-
     subgraph S3["3. Split"]
         D3[split_dataset]
     end
-
     subgraph S4["4. Features"]
         D4[build_features]
     end
-
     subgraph S5["5. Train"]
         D5[train]
     end
-
     subgraph S6["6. Evaluate"]
         D6[evaluate]
         D7[register]
     end
-
     S1 --> S2 --> S3 --> S4 --> S5 --> S6
 ```
 
@@ -148,15 +137,12 @@ flowchart LR
         PREF[Preferences Genre User]
         FEAT[Features Genre Items]
     end
-
     subgraph Hybrid["Scoring Hybride"]
         CALC["Score = 0.6 x Pop + 0.4 x Genre"]
     end
-
     subgraph Output["Sortie"]
         REC[Top-K Recommandations]
     end
-
     POP --> CALC
     PREF --> CALC
     FEAT --> CALC

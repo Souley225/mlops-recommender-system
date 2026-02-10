@@ -39,6 +39,120 @@ def load_css() -> None:
     css_path = CURRENT_DIR / "style.css"
     if css_path.exists():
         st.markdown(f"<style>{css_path.read_text()}</style>", unsafe_allow_html=True)
+    
+    # Mobile hamburger menu JS
+    st.markdown('''
+    <script>
+    (function() {
+        // Only run on mobile
+        function isMobile() { return window.innerWidth <= 768; }
+        
+        // Create hamburger button
+        function createHamburger() {
+            if (document.getElementById('mobileHamburger')) return;
+            var btn = document.createElement('button');
+            btn.id = 'mobileHamburger';
+            btn.className = 'mobile-hamburger-btn';
+            btn.setAttribute('aria-label', 'Ouvrir le menu');
+            btn.innerHTML = '<div class="hamburger-icon"><span></span><span></span><span></span></div>';
+            btn.onclick = function() {
+                // Click Streamlit's native expand button
+                var expandBtn = document.querySelector('[data-testid="collapsedControl"] button') 
+                    || document.querySelector('button[data-testid="stSidebarCollapseButton"]');
+                if (expandBtn) expandBtn.click();
+                // Hide hamburger when sidebar opens
+                btn.style.display = 'none';
+            };
+            document.body.appendChild(btn);
+        }
+        
+        // Create close button inside sidebar
+        function createCloseBtn() {
+            var sidebar = document.querySelector('section[data-testid="stSidebar"] > div');
+            if (!sidebar || document.getElementById('mobileSidebarClose')) return;
+            var closeBtn = document.createElement('button');
+            closeBtn.id = 'mobileSidebarClose';
+            closeBtn.className = 'mobile-sidebar-close';
+            closeBtn.setAttribute('aria-label', 'Fermer le menu');
+            closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            closeBtn.onclick = function() {
+                // Click Streamlit's native collapse button inside the sidebar
+                var collapseBtn = document.querySelector('section[data-testid="stSidebar"] button[data-testid="stSidebarCollapseButton"]')
+                    || document.querySelector('[data-testid="stSidebarCollapse"] button');
+                if (collapseBtn) collapseBtn.click();
+            };
+            sidebar.insertBefore(closeBtn, sidebar.firstChild);
+        }
+        
+        // Watch for sidebar state changes
+        function watchSidebar() {
+            var observer = new MutationObserver(function() {
+                if (!isMobile()) {
+                    var btn = document.getElementById('mobileHamburger');
+                    if (btn) btn.style.display = 'none';
+                    return;
+                }
+                var sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                var hamburger = document.getElementById('mobileHamburger');
+                if (!hamburger || !sidebar) return;
+                var isCollapsed = sidebar.getAttribute('aria-expanded') === 'false'
+                    || sidebar.classList.contains('st-emotion-cache-1cypcdb')
+                    || getComputedStyle(sidebar).marginLeft.startsWith('-')
+                    || getComputedStyle(sidebar).transform.includes('matrix')
+                    || sidebar.offsetWidth === 0;
+                hamburger.style.display = isCollapsed ? 'flex' : 'none';
+            });
+            observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            var btn = document.getElementById('mobileHamburger');
+            if (!isMobile()) {
+                if (btn) btn.style.display = 'none';
+            } else {
+                createHamburger();
+                createCloseBtn();
+                // Show hamburger if sidebar not visible
+                var sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                if (sidebar && btn) {
+                    var rect = sidebar.getBoundingClientRect();
+                    if (rect.right <= 0 || sidebar.offsetWidth === 0) {
+                        btn.style.display = 'flex';
+                    }
+                }
+            }
+        });
+        
+        // Init on load
+        function init() {
+            if (!isMobile()) return;
+            createHamburger();
+            createCloseBtn();
+            watchSidebar();
+            // Initially show the hamburger (sidebar starts collapsed on mobile)
+            var btn = document.getElementById('mobileHamburger');
+            var sidebar = document.querySelector('section[data-testid="stSidebar"]');
+            if (sidebar && btn) {
+                var rect = sidebar.getBoundingClientRect();
+                if (rect.right <= 0 || sidebar.offsetWidth === 0) {
+                    btn.style.display = 'flex';
+                }
+            }
+        }
+        
+        // Run after Streamlit renders
+        if (document.readyState === 'complete') {
+            setTimeout(init, 500);
+        } else {
+            window.addEventListener('load', function() { setTimeout(init, 500); });
+        }
+        // Also try after a delay for Streamlit's async rendering
+        setTimeout(init, 1000);
+        setTimeout(init, 2500);
+    })();
+    </script>
+    ''', unsafe_allow_html=True)
 
 
 # =============================================================================

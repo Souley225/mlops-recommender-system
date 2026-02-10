@@ -8,6 +8,8 @@
 [![MLflow](https://img.shields.io/badge/MLflow-Tracking-0194E2?style=flat-square&logo=mlflow&logoColor=white)](https://mlflow.org)
 [![DVC](https://img.shields.io/badge/DVC-Pipeline-945DD6?style=flat-square&logo=dvc&logoColor=white)](https://dvc.org)
 
+**🔗 Démo Live :** [https://mlops-recommender-ui.onrender.com/](https://mlops-recommender-ui.onrender.com/)
+
 ---
 
 ## Présentation

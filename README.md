@@ -28,44 +28,7 @@ Comparable aux systèmes utilisés par Netflix ou Amazon : le système apprend d
 
 ## Architecture Système
 
-```mermaid
-flowchart TB
-    subgraph Data["Data Layer"]
-        ML[(MovieLens Dataset)]
-        DVC[DVC Versioning]
-    end
-    subgraph Training["Training Pipeline"]
-        ETL[ETL Processing]
-        FE[Feature Engineering]
-        TRAIN[Model Training]
-        EVAL[Evaluation]
-        REG[Model Registry]
-    end
-    subgraph Tracking["Experiment Tracking"]
-        MLF[MLflow Server]
-    end
-    subgraph Serving["Serving Layer"]
-        API[FastAPI REST API]
-        UI[Streamlit Interface]
-    end
-    subgraph Deploy["Deployment"]
-        DOCKER[Docker Containers]
-        RENDER[Render Cloud]
-    end
-    ML --> DVC
-    DVC --> ETL
-    ETL --> FE
-    FE --> TRAIN
-    TRAIN --> EVAL
-    EVAL --> REG
-    TRAIN -.-> MLF
-    EVAL -.-> MLF
-    REG --> API
-    API --> UI
-    API --> DOCKER
-    UI --> DOCKER
-    DOCKER --> RENDER
-```
+![Architecture Système](docs/images/architecture.png)
 
 ---
 

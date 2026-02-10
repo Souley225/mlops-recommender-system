@@ -36,29 +36,7 @@ Comparable aux systèmes utilisés par Netflix ou Amazon : le système apprend d
 
 Le projet utilise **DVC** pour orchestrer un pipeline reproductible en 6 étapes :
 
-```mermaid
-flowchart LR
-    subgraph S1["1. Download"]
-        D1[download_data]
-    end
-    subgraph S2["2. Transform"]
-        D2[make_dataset]
-    end
-    subgraph S3["3. Split"]
-        D3[split_dataset]
-    end
-    subgraph S4["4. Features"]
-        D4[build_features]
-    end
-    subgraph S5["5. Train"]
-        D5[train]
-    end
-    subgraph S6["6. Evaluate"]
-        D6[evaluate]
-        D7[register]
-    end
-    S1 --> S2 --> S3 --> S4 --> S5 --> S6
-```
+![Pipeline MLOps](docs/images/mlops_pipeline.png)
 
 ### Détail des étapes
 

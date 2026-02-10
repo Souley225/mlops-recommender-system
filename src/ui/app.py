@@ -749,16 +749,7 @@ def main() -> None:
             st.rerun()
         return
     
-    header()
-    welcome_section()
-    
-    st.markdown("---")
-    
-    # Initialize tab state
-    if "current_tab" not in st.session_state:
-        st.session_state.current_tab = "Recommandations"
-    
-    # Sidebar navigation
+    # Sidebar - Header, branding, status
     with st.sidebar:
         st.markdown('''
         <div class="sidebar-brand">
@@ -767,29 +758,10 @@ def main() -> None:
         </div>
         ''', unsafe_allow_html=True)
         
-        st.markdown("---")
-        
-        # Navigation menu
-        st.markdown('<p class="sidebar-nav-title"><i class="fas fa-bars"></i> Navigation</p>', unsafe_allow_html=True)
-        
-        menu_items = {
-            "Recommandations": "fa-star",
-            "Decouvrir": "fa-compass", 
-            "Historique": "fa-history",
-            "Statistiques": "fa-chart-line"
-        }
-        
-        for item, icon in menu_items.items():
-            is_active = st.session_state.current_tab == item
-            btn_type = "primary" if is_active else "secondary"
-            if st.button(
-                f"  {item}",
-                key=f"nav_{item}",
-                type=btn_type,
-                use_container_width=True
-            ):
-                st.session_state.current_tab = item
-                st.rerun()
+        st.markdown('''
+        <p class="header-tagline" style="padding: 0 1.25rem; margin-bottom: 0.5rem;">Moteur de recommandation intelligent propulse par le Machine Learning</p>
+        <p class="header-tech" style="padding: 0 1.25rem;">Python • FastAPI • MLflow • DVC • Docker</p>
+        ''', unsafe_allow_html=True)
         
         st.markdown("---")
         
@@ -828,6 +800,22 @@ def main() -> None:
         
         st.markdown("---")
         
+        # Welcome / How to use
+        with st.expander("Comment utiliser ?", expanded=False):
+            st.markdown("""
+            **Bienvenue !** Cette application vous aide a decouvrir des films adaptes a vos gouts.
+            
+            Vous explorez des **profils de demonstration**. Chaque profil represente un utilisateur avec des gouts differents.
+            
+            **Onglets :**
+            - **Recommandations** : Suggestions personnalisees
+            - **Decouvrir** : Films similaires
+            - **Historique** : Films deja notes
+            - **Statistiques** : Chiffres cles
+            """)
+        
+        st.markdown("---")
+        
         # Footer Links
         st.markdown('''
         <div class="sidebar-links">
@@ -844,14 +832,24 @@ def main() -> None:
         </div>
         ''', unsafe_allow_html=True)
     
-    # Display active tab content
-    if st.session_state.current_tab == "Recommandations":
+    # Main content - Tabs navigation
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "Recommandations",
+        "Decouvrir",
+        "Historique",
+        "Statistiques"
+    ])
+    
+    with tab1:
         tab_recommendations()
-    elif st.session_state.current_tab == "Decouvrir":
+    
+    with tab2:
         tab_discover()
-    elif st.session_state.current_tab == "Historique":
+    
+    with tab3:
         tab_history()
-    elif st.session_state.current_tab == "Statistiques":
+    
+    with tab4:
         tab_stats()
     
     # Footer

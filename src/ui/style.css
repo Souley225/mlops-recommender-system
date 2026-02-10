@@ -1069,6 +1069,96 @@ div[data-testid="stAlert"]:has(.stInfo),
 }
 
 /* =============================================================================
+   Tabs - Premium Navigation
+   ============================================================================= */
+
+/* Tab container */
+.stTabs {
+    background: transparent;
+}
+
+/* Tab list bar */
+.stTabs [data-baseweb="tab-list"] {
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2);
+    gap: var(--space-1);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Hide default bottom border */
+.stTabs [data-baseweb="tab-list"] {
+    border-bottom: none;
+}
+
+/* Individual tabs */
+.stTabs [data-baseweb="tab"] {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-5);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    white-space: nowrap;
+    position: relative;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+/* Active tab */
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    color: var(--white);
+    font-weight: 600;
+    box-shadow: var(--shadow-md), 0 0 20px rgba(37, 99, 235, 0.3);
+}
+
+/* Remove default tab highlight bar */
+.stTabs [data-baseweb="tab-highlight"] {
+    display: none;
+}
+
+/* Remove default tab border */
+.stTabs [data-baseweb="tab-border"] {
+    display: none;
+}
+
+/* Tab panel content */
+.stTabs [data-baseweb="tab-panel"] {
+    padding: var(--space-6) 0;
+}
+
+/* Mobile tab adjustments */
+@media (max-width: 768px) {
+    .stTabs [data-baseweb="tab-list"] {
+        padding: var(--space-1);
+        border-radius: var(--radius);
+        gap: 2px;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        padding: var(--space-3) var(--space-3);
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .stTabs [data-baseweb="tab"] {
+        padding: var(--space-2) var(--space-2);
+        font-size: 0.75rem;
+    }
+}
+
+/* =============================================================================
    Cards / Containers - Glass Morphism
    ============================================================================= */
 div[data-testid="stVerticalBlock"]>div[data-testid="stVerticalBlock"] {

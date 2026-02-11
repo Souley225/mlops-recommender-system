@@ -6,7 +6,7 @@ name: Keep Alive
 on:
   schedule:
     # Toutes les 14 minutes
-    - cron: '*/14 * * * *'
+    - cron: '*/12 * * * *'
   workflow_dispatch:  # Permet de lancer manuellement
 
 jobs:

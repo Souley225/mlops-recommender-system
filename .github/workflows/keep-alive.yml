@@ -15,10 +15,10 @@ jobs:
     steps:
       - name: Ping API Health
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://mlops-recommender-system-1.onrender.com/health || true
-          echo "API pinged"
+          echo "Pinging API..."
+          curl -v https://mlops-recommender-system-1.onrender.com/health
       
       - name: Ping UI
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://mlops-recommender-ui.onrender.com || true
-          echo "UI pinged"
+          echo "Pinging UI..."
+          curl -v https://mlops-recommender-ui.onrender.com

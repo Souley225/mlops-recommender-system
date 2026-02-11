@@ -163,7 +163,7 @@ def load_css() -> None:
 def api_health() -> Optional[Dict]:
     """Verifie l'etat de l'API."""
     try:
-        r = requests.get(f"{API_URL}/health", timeout=5)
+        r = requests.get(f"{API_URL}/health", timeout=30)
         return r.json() if r.ok else None
     except Exception:
         return None
@@ -173,7 +173,7 @@ def api_health() -> Optional[Dict]:
 def api_users() -> List[int]:
     """Liste des utilisateurs."""
     try:
-        r = requests.get(f"{API_URL}/users", params={"limit": 500}, timeout=10)
+        r = requests.get(f"{API_URL}/users", params={"limit": 500}, timeout=30)
         return r.json().get("users", []) if r.ok else []
     except Exception:
         return []
@@ -183,7 +183,7 @@ def api_users() -> List[int]:
 def api_items() -> List[int]:
     """Liste des films."""
     try:
-        r = requests.get(f"{API_URL}/items", params={"limit": 500}, timeout=10)
+        r = requests.get(f"{API_URL}/items", params={"limit": 500}, timeout=30)
         return r.json().get("items", []) if r.ok else []
     except Exception:
         return []
@@ -193,7 +193,7 @@ def api_items() -> List[int]:
 def api_items_with_metadata() -> List[Dict]:
     """Liste des films avec titres et genres."""
     try:
-        r = requests.get(f"{API_URL}/items-with-metadata", params={"limit": 500}, timeout=10)
+        r = requests.get(f"{API_URL}/items-with-metadata", params={"limit": 500}, timeout=30)
         return r.json().get("items", []) if r.ok else []
     except Exception:
         return []
@@ -205,7 +205,7 @@ def api_recommend(user_id: int, k: int, exclude: bool) -> Optional[Dict]:
         r = requests.post(
             f"{API_URL}/recommend",
             json={"user_id": user_id, "k": k, "exclude_seen": exclude},
-            timeout=15,
+            timeout=30,
         )
         return r.json() if r.ok else None
     except Exception:
@@ -218,7 +218,7 @@ def api_similar(item_id: int, k: int) -> Optional[Dict]:
         r = requests.post(
             f"{API_URL}/similar-items",
             json={"item_id": item_id, "k": k},
-            timeout=15,
+            timeout=30,
         )
         return r.json() if r.ok else None
     except Exception:
@@ -228,7 +228,7 @@ def api_similar(item_id: int, k: int) -> Optional[Dict]:
 def api_history(user_id: int) -> Optional[Dict]:
     """Historique utilisateur."""
     try:
-        r = requests.get(f"{API_URL}/user/{user_id}/history", timeout=10)
+        r = requests.get(f"{API_URL}/user/{user_id}/history", timeout=30)
         return r.json() if r.ok else None
     except Exception:
         return None
